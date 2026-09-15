@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вивчення англійських слів та цитат</title>
+    <title>Англійська платформа: Слова, Завдання та Ігри</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,12 +12,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
-            padding: 20px 0;
+            padding: 15px;
             overflow-x: hidden;
             position: relative;
+            box-sizing: border-box;
         }
 
         /* Інтерактивний фон з сотами */
@@ -33,8 +34,9 @@
 
         h1 {
             color: #ffffff;
-            margin-bottom: 15px;
+            margin: 10px 0 15px 0;
             text-align: center;
+            font-size: 24px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
@@ -75,12 +77,14 @@
             margin-bottom: 20px;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
             z-index: 2;
         }
 
         .mode-btn {
-            padding: 8px 16px;
-            font-size: 14px;
+            padding: 8px 14px;
+            font-size: 13px;
             cursor: pointer;
             border: 2px solid #3498db;
             border-radius: 6px;
@@ -96,33 +100,38 @@
             box-shadow: 0 0 12px rgba(52, 152, 219, 0.4);
         }
 
-        .teacher-panel {
-            background: rgba(22, 22, 22, 0.9);
+        .teacher-panel, .container, .task-board {
+            background: rgba(22, 22, 22, 0.92);
             border: 1px solid #333;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            width: 420px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+            width: 100%;
+            max-width: 450px;
             box-sizing: border-box;
             text-align: left;
             z-index: 2;
+            margin-bottom: 20px;
         }
 
         .container {
-            background: rgba(22, 22, 22, 0.9);
-            border: 1px solid #333;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
-            width: 420px;
             text-align: center;
-            box-sizing: border-box;
-            z-index: 2;
+        }
+
+        .task-board {
+            border-left: 4px solid #f39c12;
+        }
+
+        .task-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #ccc;
+            white-space: pre-wrap;
+            margin-top: 8px;
         }
 
         .card {
-            height: 170px;
+            height: 160px;
             background-color: rgba(30, 30, 30, 0.9);
             border: 2px solid #444;
             border-radius: 10px;
@@ -139,15 +148,15 @@
             font-weight: bold;
             line-height: 1.4;
             overflow-y: auto;
+            box-sizing: border-box;
         }
 
         .card:hover {
             border-color: #3498db;
             background-color: rgba(40, 40, 40, 0.95);
-            transform: translateY(-2px);
         }
 
-        .test-box {
+        .test-box, .game-box {
             display: none;
             text-align: left;
         }
@@ -164,7 +173,7 @@
         .option-btn {
             display: block;
             width: 100%;
-            padding: 10px;
+            padding: 12px 10px;
             margin-bottom: 10px;
             font-size: 14px;
             cursor: pointer;
@@ -173,6 +182,7 @@
             background-color: rgba(35, 35, 35, 0.9);
             color: #e0e0e0;
             text-align: left;
+            box-sizing: border-box;
             transition: background-color 0.2s, border-color 0.2s;
         }
 
@@ -193,9 +203,54 @@
             border-color: #c0392b;
         }
 
+        /* Стилі для міні-гри */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .game-card {
+            background: rgba(40, 40, 40, 0.9);
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+            user-select: none;
+            transition: all 0.2s;
+            min-height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-card:hover {
+            border-color: #f39c12;
+            background: rgba(55, 55, 55, 0.95);
+        }
+
+        .game-card.selected {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.3);
+        }
+
+        .game-card.matched {
+            background: rgba(39, 174, 96, 0.4);
+            border-color: #27ae60;
+            color: #aaa;
+            cursor: default;
+            opacity: 0.6;
+        }
+
         .nav-buttons {
             display: flex;
             justify-content: space-between;
+            gap: 10px;
         }
 
         button.action-btn {
@@ -207,6 +262,7 @@
             background-color: #3498db;
             color: white;
             transition: background-color 0.2s;
+            flex: 1;
         }
 
         button.action-btn:hover {
@@ -229,9 +285,20 @@
         }
 
         input, select, textarea {
+            width: 100%;
             background-color: #1e1e1e !important;
             color: #fff !important;
             border: 1px solid #444 !important;
+            box-sizing: border-box;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            h1 { font-size: 20px; }
+            .cat-btn { font-size: 11px; padding: 5px 10px; }
+            .teacher-panel, .container, .task-board { padding: 15px; }
         }
     </style>
 </head>
@@ -240,43 +307,65 @@
     <!-- Динамічний фон із сотами -->
     <canvas id="bg-canvas"></canvas>
 
-    <h1>Англійські слова та цитати</h1>
+    <h1>Англійська платформа: Навчання та Ігри</h1>
     
-    <!-- Панель для вчителя (масове додавання) -->
+    <!-- Дошка завдань від вчителя -->
+    <div class="task-board">
+        <div style="font-weight: bold; color: #f39c12; display: flex; justify-content: space-between; align-items: center;">
+            <span>📋 Дошка завдань та матеріалів від вчителя</span>
+        </div>
+        <div class="task-content" id="display-tasks">Завантаження завдань...</div>
+    </div>
+
+    <!-- Панель вчителя (Керування, теми, слова, завдання) -->
     <div class="teacher-panel">
         <details>
-            <summary style="cursor: pointer; font-weight: bold; color: #27ae60;">Панель вчителя (масове додавання слів)</summary>
-            <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-                <label style="font-size: 12px; color: #aaa;">Виберіть категорію для списку:</label>
-                <select id="bulk-cat" style="padding: 8px; border-radius: 4px; font-size: 14px;">
-                    <option value="kitchen">Кухня</option>
-                    <option value="bedroom">Спальня</option>
-                    <option value="hallway">Прихожа</option>
-                    <option value="home">Дім</option>
-                    <option value="office">Офіс</option>
-                    <option value="games">Ігри</option>
-                    <option value="household">Побут</option>
-                    <option value="electronics">Електроніка</option>
-                    <option value="toys">Іграшки</option>
-                    <option value="cars">Машини</option>
-                    <option value="building">Будова</option>
-                    <option value="university">Університет</option>
-                    <option value="interview">Інтерв'ю</option>
-                    <option value="tv_films">ТБ і фільми</option>
-                    <option value="quotes">Цитати/Фільми</option>
-                </select>
-
-                <label style="font-size: 12px; color: #aaa;">Вставте список (формат: Слово - Переклад, кожне з нового рядка):</label>
-                <textarea id="bulk-text" rows="5" placeholder="Apple - Яблуко&#10;Banana - Банан" style="padding: 8px; border-radius: 4px; font-size: 13px; resize: vertical;"></textarea>
+            <summary style="cursor: pointer; font-weight: bold; color: #27ae60;">Панель вчителя (Адмін-центр)</summary>
+            <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 12px;">
                 
-                <button onclick="addBulkWords()" class="action-btn" style="background-color: #27ae60; margin-top: 5px;">Імпортувати весь список</button>
+                <!-- Блок редагування завдань -->
+                <div style="border-bottom: 1px solid #333; padding-bottom: 10px;">
+                    <label style="font-size: 12px; color: #f39c12; font-weight: bold;">Оновити завдання/текст для читання:</label>
+                    <textarea id="teacher-task-input" rows="3" placeholder="Напишіть завдання або посилання на інтерв'ю..." style="margin-top: 5px; font-size: 13px;"></textarea>
+                    <button onclick="saveTeacherTasks()" class="action-btn" style="background-color: #f39c12; margin-top: 5px; width: 100%;">Зберегти завдання</button>
+                </div>
+
+                <!-- Блок масового додавання слів -->
+                <div>
+                    <label style="font-size: 12px; color: #aaa;">Виберіть категорію:</label>
+                    <select id="bulk-cat" style="font-size: 14px; margin-top: 3px;">
+                        <option value="verbs">Неправильні дієслова (New)</option>
+                        <option value="kitchen">Кухня</option>
+                        <option value="bedroom">Спальня</option>
+                        <option value="hallway">Прихожа</option>
+                        <option value="home">Дім</option>
+                        <option value="office">Офіс</option>
+                        <option value="games">Ігри</option>
+                        <option value="household">Побут</option>
+                        <option value="electronics">Електроніка</option>
+                        <option value="toys">Іграшки</option>
+                        <option value="cars">Машини</option>
+                        <option value="building">Будова</option>
+                        <option value="university">Університет</option>
+                        <option value="interview">Інтерв'ю</option>
+                        <option value="tv_films">ТБ і фільми</option>
+                        <option value="quotes">Цитати/Фільми</option>
+                    </select>
+
+                    <label style="font-size: 12px; color: #aaa; margin-top: 5px; display: block;">Додати список (Формат: Слово - Переклад):</label>
+                    <textarea id="bulk-text" rows="4" placeholder="Be - Бути&#10;Begin - Починати" style="margin-top: 3px; font-size: 13px;"></textarea>
+                    
+                    <button onclick="addBulkWords()" class="action-btn" style="background-color: #27ae60; margin-top: 5px; width: 100%;">Додати слова до теми</button>
+                </div>
+
             </div>
         </details>
     </div>
 
-    <!-- Вибір категорій -->
+    <!-- Вибір категорій (теми) -->
     <div class="category-select-box" id="category-buttons">
-        <button class="cat-btn active" onclick="changeCategory('all')">Усі</button>
+        <button class="cat-btn active" onclick="changeCategory('all')">Усі теми</button>
+        <button class="cat-btn" onclick="changeCategory('verbs')">Неправильні дієслова</button>
         <button class="cat-btn" onclick="changeCategory('kitchen')">Кухня</button>
         <button class="cat-btn" onclick="changeCategory('bedroom')">Спальня</button>
         <button class="cat-btn" onclick="changeCategory('hallway')">Прихожа</button>
@@ -294,9 +383,11 @@
         <button class="cat-btn" onclick="changeCategory('quotes')">Цитати/Фільми</button>
     </div>
 
+    <!-- Перемикач режимів -->
     <div class="mode-buttons">
-        <button class="mode-btn active" id="btn-cards" onclick="switchMode('cards')">Режим карток</button>
-        <button class="mode-btn" id="btn-test" onclick="switchMode('test')">Режим тесту</button>
+        <button class="mode-btn active" id="btn-cards" onclick="switchMode('cards')">🃏 Режим карток</button>
+        <button class="mode-btn" id="btn-test" onclick="switchMode('test')">📝 Режим тесту</button>
+        <button class="mode-btn" id="btn-game" onclick="switchMode('game')">🎮 Гра «Знайди пару»</button>
     </div>
 
     <div class="container">
@@ -320,6 +411,14 @@
             <div class="result-message" id="test-result"></div>
             <button class="action-btn" id="next-test-btn" style="width: 100%; margin-top: 10px; display: none;" onclick="nextTestQuestion()">Наступне питання</button>
         </div>
+
+        <!-- МІНІ-ІГРИ -->
+        <div id="game-section" class="game-box">
+            <div class="counter" id="game-counter">Знайдіть усі пари слів</div>
+            <div class="game-grid" id="game-grid-container"></div>
+            <div class="result-message" id="game-result"></div>
+            <button class="action-btn" style="width: 100%; display: none; margin-top: 10px;" id="restart-game-btn" onclick="startMatchingGame()">Грати знову</button>
+        </div>
     </div>
 
     <script>
@@ -337,6 +436,13 @@
         window.addEventListener('mousemove', (e) => {
             mouse.targetX = e.clientX;
             mouse.targetY = e.clientY;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouse.targetX = e.touches[0].clientX;
+                mouse.targetY = e.touches[0].clientY;
+            }
         });
 
         function resize() {
@@ -371,7 +477,6 @@
         }
 
         function animateBg() {
-            // Плавний рух курсору (lerp)
             mouse.x += (mouse.targetX - mouse.x) * 0.1;
             mouse.y += (mouse.targetY - mouse.y) * 0.1;
 
@@ -388,7 +493,6 @@
                     const x = c * horizDist;
                     const y = r * vertDist + (c % 2 === 0 ? 0 : vertDist / 2);
 
-                    // Відстань до миші для ефекту зміщення та підсвічування
                     const dx = mouse.x - x;
                     const dy = mouse.y - y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
@@ -399,7 +503,6 @@
 
                     if (isClose) {
                         const force = (120 - dist) / 120;
-                        // Зміщуємо соту від курсора у випадкові/напрямлені сторони
                         offsetX = -(dx / dist) * force * 15;
                         offsetY = -(dy / dist) * force * 15;
                     }
@@ -407,10 +510,8 @@
                     const currentX = x + offsetX;
                     const currentY = y + offsetY;
 
-                    // Малюємо саму соту
                     drawHexagon(currentX, currentY, hexRadius - 2, 'rgba(25, 25, 25, 0.7)', isClose ? '#444' : '#222');
 
-                    // Кольорові смужки на стиках при наближенні курсора
                     if (isClose) {
                         for (let i = 0; i < 6; i++) {
                             const angle = (Math.PI / 3) * i;
@@ -424,7 +525,7 @@
                                 ctx.shadowBlur = 8;
                                 ctx.shadowColor = ctx.fillStyle;
                                 ctx.fill();
-                                ctx.shadowBlur = 0; // скидання тіні
+                                ctx.shadowBlur = 0;
                             }
                         }
                     }
@@ -437,7 +538,26 @@
 
     <!-- Основна логіка додатку -->
     <script>
+        // База слів із доданою темою неправильних дієслів
         const allWords = [
+            // --- НЕПРАВИЛЬНІ ДІЄСЛОВА ---
+            { en: "Be (was/were, been)", ua: "Бути", category: "verbs" },
+            { en: "Begin (began, begun)", ua: "Починати", category: "verbs" },
+            { en: "Break (broke, broken)", ua: "Ламати", category: "verbs" },
+            { en: "Bring (brought, brought)", ua: "Приносити", category: "verbs" },
+            { en: "Buy (bought, bought)", ua: "Купувати", category: "verbs" },
+            { en: "Come (came, come)", ua: "Приходити", category: "verbs" },
+            { en: "Do (did, done)", ua: "Робити", category: "verbs" },
+            { en: "Drink (drank, drunk)", ua: "Пити", category: "verbs" },
+            { en: "Eat (ate, eaten)", ua: "Їсти", category: "verbs" },
+            { en: "Go (went, gone)", ua: "Йти, їхати", category: "verbs" },
+            { en: "Have (had, had)", ua: "МАТИ", category: "verbs" },
+            { en: "Make (made, made)", ua: "Створювати, робити", category: "verbs" },
+            { en: "Read (read, read)", ua: "Читати", category: "verbs" },
+            { en: "See (saw, seen)", ua: "Бачити", category: "verbs" },
+            { en: "Take (took, taken)", ua: "Брати", category: "verbs" },
+            { en: "Write (wrote, written)", ua: "Писати", category: "verbs" },
+
             // --- КУХНЯ ---
             { en: "Refrigerator", ua: "Холодильник", category: "kitchen" },
             { en: "Fridge", ua: "Холодильник (скорочено)", category: "kitchen" },
@@ -769,7 +889,7 @@
             { en: "After all this time? - Always.", ua: "Після стількох років? — Завжди.", category: "quotes" }
         ];
 
-        // Завантаження збережених слів із LocalStorage
+        // Завантаження збережених слів та завдань
         const savedWords = localStorage.getItem("customWords");
         if (savedWords) {
             allWords.push(...JSON.parse(savedWords));
@@ -785,6 +905,29 @@
         let testIndex = 0;
         let testScore = 0;
         let answered = false;
+
+        // Завантаження завдань вчителя
+        function loadTeacherTasks() {
+            const savedTask = localStorage.getItem("teacherTaskText");
+            const taskBox = document.getElementById("display-tasks");
+            const taskInput = document.getElementById("teacher-task-input");
+            
+            if (savedTask) {
+                taskBox.textContent = savedTask;
+                if(taskInput) taskInput.value = savedTask;
+            } else {
+                const defaultTask = "1. Вивчіть блок «Неправильні дієслова».\n2. Пройдіть тест або міні-гру.\n3. Підготуйтеся до обговорення нових тем.";
+                taskBox.textContent = defaultTask;
+                if(taskInput) taskInput.value = defaultTask;
+            }
+        }
+
+        function saveTeacherTasks() {
+            const text = document.getElementById("teacher-task-input").value;
+            localStorage.setItem("teacherTaskText", text);
+            loadTeacherTasks();
+            alert("Завдання успішно оновлено!");
+        }
 
         function filterWords() {
             if (currentCategory === 'all') {
@@ -805,8 +948,10 @@
             if (currentMode === 'cards') {
                 cardIndex = 0;
                 updateCard();
-            } else {
+            } else if (currentMode === 'test') {
                 startTest();
+            } else if (currentMode === 'game') {
+                startMatchingGame();
             }
         }
 
@@ -814,16 +959,19 @@
             currentMode = mode;
             document.getElementById('btn-cards').classList.toggle('active', mode === 'cards');
             document.getElementById('btn-test').classList.toggle('active', mode === 'test');
+            document.getElementById('btn-game').classList.toggle('active', mode === 'game');
             
+            document.getElementById('cards-section').style.display = (mode === 'cards') ? 'block' : 'none';
+            document.getElementById('test-section').style.display = (mode === 'test') ? 'block' : 'none';
+            document.getElementById('game-section').style.display = (mode === 'game') ? 'block' : 'none';
+
             if (mode === 'cards') {
-                document.getElementById('cards-section').style.display = 'block';
-                document.getElementById('test-section').style.display = 'none';
                 cardIndex = 0;
                 updateCard();
-            } else {
-                document.getElementById('cards-section').style.display = 'none';
-                document.getElementById('test-section').style.display = 'block';
+            } else if (mode === 'test') {
                 startTest();
+            } else if (mode === 'game') {
+                startMatchingGame();
             }
         }
 
@@ -862,13 +1010,11 @@
                 alert(`Успішно додано нових слів: ${addedCount}!`);
                 
                 filterWords();
-                if (currentMode === 'cards') {
-                    updateCard();
-                } else {
-                    startTest();
-                }
+                if (currentMode === 'cards') updateCard();
+                else if (currentMode === 'test') startTest();
+                else if (currentMode === 'game') startMatchingGame();
             } else {
-                alert("Не вдалося розпізнати слова. Перевірте формат: Слово - Переклад (кожне з нового рядка).");
+                alert("Не вдалося розпізнати слова. Перевірте формат: Слово - Переклад");
             }
         }
 
@@ -992,8 +1138,90 @@
             }
         }
 
+        // --- МІНІ-ІГРА «ЗНАЙДИ ПАРУ» ---
+        let selectedGameCard = null;
+        let matchedPairsCount = 0;
+        let totalPairsInGame = 0;
+
+        function startMatchingGame() {
+            const gridContainer = document.getElementById("game-grid-container");
+            const resultMsg = document.getElementById("game-result");
+            const restartBtn = document.getElementById("restart-game-btn");
+            gridContainer.innerHTML = "";
+            resultMsg.textContent = "";
+            restartBtn.style.display = "none";
+            selectedGameCard = null;
+            matchedPairsCount = 0;
+
+            if (activeWords.length < 4) {
+                gridContainer.innerHTML = "<div style='grid-column: span 2; text-align:center; color:#888;'>У цій категорії занадто мало слів для гри (потрібно мінімум 4). Виберіть «Усі теми».</div>";
+                return;
+            }
+
+            // Вибираємо 4 випадкові слова для раунду гри
+            let shuffled = [...activeWords].sort(() => Math.random() - 0.5).slice(0, 4);
+            totalPairsInGame = shuffled.length;
+            document.getElementById("game-counter").textContent = `Знайдіть пари (Залишилось: ${totalPairsInGame})`;
+
+            let items = [];
+            shuffled.forEach((item, index) => {
+                items.push({ text: item.en, type: 'en', pairId: index });
+                items.push({ text: item.ua, type: 'ua', pairId: index });
+            });
+
+            items.sort(() => Math.random() - 0.5);
+
+            items.forEach(elem => {
+                const card = document.createElement("div");
+                card.className = "game-card";
+                card.textContent = elem.text;
+                card.dataset.pairId = elem.pairId;
+                card.dataset.type = elem.type;
+
+                card.onclick = () => handleGameCardClick(card);
+                gridContainer.appendChild(card);
+            });
+        }
+
+        function handleGameCardClick(card) {
+            if (card.classList.contains('matched') || card.classList.contains('selected')) return;
+
+            if (!selectedGameCard) {
+                selectedGameCard = card;
+                card.classList.add('selected');
+            } else {
+                const firstCard = selectedGameCard;
+                const secondCard = card;
+
+                if (firstCard.dataset.pairId === secondCard.dataset.pairId && firstCard.dataset.type !== secondCard.dataset.type) {
+                    // Знайшли пару!
+                    firstCard.classList.remove('selected');
+                    firstCard.classList.add('matched');
+                    secondCard.classList.add('matched');
+                    selectedGameCard = null;
+                    matchedPairsCount++;
+
+                    document.getElementById("game-counter").textContent = `Знайдіть пари (Залишилось: ${totalPairsInGame - matchedPairsCount})`;
+
+                    if (matchedPairsCount === totalPairsInGame) {
+                        document.getElementById("game-result").textContent = "Вітаю! Усі пари знайдено! 🏆";
+                        document.getElementById("restart-game-btn").style.display = "block";
+                    }
+                } else {
+                    // Помилка
+                    secondCard.classList.add('selected');
+                    setTimeout(() => {
+                        firstCard.classList.remove('selected');
+                        secondCard.classList.remove('selected');
+                        selectedGameCard = null;
+                    }, 500);
+                }
+            }
+        }
+
         filterWords();
         updateCard();
+        loadTeacherTasks();
     </script>
 
 </body>
