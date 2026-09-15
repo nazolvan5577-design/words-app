@@ -26,6 +26,27 @@
             pointer-events: none;
         }
 
+        /* Стилізований підпис «вирізьблений у сотах» */
+        .carved-signature {
+            position: fixed;
+            top: 20px;
+            left: 25px;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Courier New', Courier, monospace;
+            color: #333333; /* Сірий колір тексту всередині сот */
+            text-shadow: 
+                -1px -1px 0px #000000, 
+                1px 1px 0px rgba(255, 255, 255, 0.05),
+                0 0 8px rgba(231, 76, 60, 0.8), /* Червоний контур/свечение */
+                0 0 15px rgba(231, 76, 60, 0.4);
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+
         header {
             text-align: center;
             margin-bottom: 20px;
@@ -428,6 +449,9 @@
 
     <!-- Інтерактивний фон із сотами та кольоровим світінням -->
     <canvas id="bg-canvas"></canvas>
+
+    <!-- Вирізьблений у сотах авторський підпис -->
+    <div class="carved-signature">Nazar Tsybulskyi</div>
 
     <header>
         <h1>Family English Academy 👨‍👩‍👧‍👦</h1>
