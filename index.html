@@ -7,7 +7,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
+            background-color: #121212;
+            color: #e0e0e0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -15,12 +16,28 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px 0;
+            overflow-x: hidden;
+            position: relative;
         }
+
+        /* Інтерактивний фон з сотами */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
         h1 {
-            color: #333;
+            color: #ffffff;
             margin-bottom: 15px;
             text-align: center;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
+
         .category-select-box {
             margin-bottom: 15px;
             display: flex;
@@ -28,95 +45,122 @@
             flex-wrap: wrap;
             justify-content: center;
             max-width: 750px;
+            z-index: 2;
         }
+
         .cat-btn {
             padding: 6px 12px;
             font-size: 12px;
             cursor: pointer;
-            border: 1px solid #7f8c8d;
+            border: 1px solid #444;
             border-radius: 20px;
-            background-color: white;
-            color: #7f8c8d;
+            background-color: rgba(30, 30, 30, 0.85);
+            color: #b0b0b0;
             transition: all 0.2s;
         }
+
+        .cat-btn:hover {
+            border-color: #2ecc71;
+            color: #fff;
+        }
+
         .cat-btn.active {
             background-color: #27ae60;
             color: white;
             border-color: #27ae60;
+            box-shadow: 0 0 10px rgba(39, 174, 96, 0.4);
         }
+
         .mode-buttons {
             margin-bottom: 20px;
             display: flex;
             gap: 10px;
+            z-index: 2;
         }
+
         .mode-btn {
             padding: 8px 16px;
             font-size: 14px;
             cursor: pointer;
             border: 2px solid #3498db;
             border-radius: 6px;
-            background-color: white;
+            background-color: rgba(30, 30, 30, 0.85);
             color: #3498db;
             font-weight: bold;
             transition: all 0.2s;
         }
+
         .mode-btn.active {
             background-color: #3498db;
             color: white;
+            box-shadow: 0 0 12px rgba(52, 152, 219, 0.4);
         }
+
         .teacher-panel {
-            background: white;
+            background: rgba(22, 22, 22, 0.9);
+            border: 1px solid #333;
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 20px;
             width: 420px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
             box-sizing: border-box;
             text-align: left;
+            z-index: 2;
         }
+
         .container {
-            background: white;
+            background: rgba(22, 22, 22, 0.9);
+            border: 1px solid #333;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
             width: 420px;
             text-align: center;
             box-sizing: border-box;
+            z-index: 2;
         }
+
         .card {
             height: 170px;
-            background-color: #ffffff;
-            border: 2px solid #e0e0e0;
+            background-color: rgba(30, 30, 30, 0.9);
+            border: 2px solid #444;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             user-select: none;
-            transition: transform 0.2s, background-color 0.2s;
+            transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
             padding: 15px;
             margin-bottom: 20px;
             font-size: 18px;
-            color: #2c3e50;
+            color: #ffffff;
             font-weight: bold;
             line-height: 1.4;
             overflow-y: auto;
         }
+
         .card:hover {
             border-color: #3498db;
+            background-color: rgba(40, 40, 40, 0.95);
+            transform: translateY(-2px);
         }
+
         .test-box {
             display: none;
             text-align: left;
         }
+
         .test-word {
             font-size: 20px;
             font-weight: bold;
-            color: #2c3e50;
+            color: #ffffff;
             text-align: center;
             margin-bottom: 20px;
             line-height: 1.4;
         }
+
         .option-btn {
             display: block;
             width: 100%;
@@ -124,30 +168,36 @@
             margin-bottom: 10px;
             font-size: 14px;
             cursor: pointer;
-            border: 1px solid #bdc3c7;
+            border: 1px solid #444;
             border-radius: 6px;
-            background-color: #fff;
-            color: #333;
+            background-color: rgba(35, 35, 35, 0.9);
+            color: #e0e0e0;
             text-align: left;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, border-color 0.2s;
         }
+
         .option-btn:hover {
-            background-color: #ecf0f1;
+            background-color: rgba(50, 50, 50, 0.9);
+            border-color: #3498db;
         }
+
         .option-btn.correct {
-            background-color: #2ecc71 !important;
+            background-color: #27ae60 !important;
             color: white;
-            border-color: #2ecc71;
+            border-color: #27ae60;
         }
+
         .option-btn.wrong {
-            background-color: #e74c3c !important;
+            background-color: #c0392b !important;
             color: white;
-            border-color: #e74c3c;
+            border-color: #c0392b;
         }
+
         .nav-buttons {
             display: flex;
             justify-content: space-between;
         }
+
         button.action-btn {
             padding: 10px 15px;
             font-size: 14px;
@@ -158,35 +208,47 @@
             color: white;
             transition: background-color 0.2s;
         }
+
         button.action-btn:hover {
             background-color: #2980b9;
         }
+
         .counter {
             margin-bottom: 15px;
-            color: #7f8c8d;
+            color: #888;
             font-size: 14px;
         }
+
         .result-message {
             font-size: 18px;
             font-weight: bold;
-            color: #27ae60;
+            color: #2ecc71;
             text-align: center;
             margin-top: 15px;
             min-height: 25px;
+        }
+
+        input, select, textarea {
+            background-color: #1e1e1e !important;
+            color: #fff !important;
+            border: 1px solid #444 !important;
         }
     </style>
 </head>
 <body>
 
+    <!-- Динамічний фон із сотами -->
+    <canvas id="bg-canvas"></canvas>
+
     <h1>Англійські слова та цитати</h1>
     
-    <!-- Розширена панель вчителя для масового додавання -->
+    <!-- Панель для вчителя (масове додавання) -->
     <div class="teacher-panel">
         <details>
             <summary style="cursor: pointer; font-weight: bold; color: #27ae60;">Панель вчителя (масове додавання слів)</summary>
             <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-                <label style="font-size: 12px; color: #555;">Виберіть категорію для списку:</label>
-                <select id="bulk-cat" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                <label style="font-size: 12px; color: #aaa;">Виберіть категорію для списку:</label>
+                <select id="bulk-cat" style="padding: 8px; border-radius: 4px; font-size: 14px;">
                     <option value="kitchen">Кухня</option>
                     <option value="bedroom">Спальня</option>
                     <option value="hallway">Прихожа</option>
@@ -204,8 +266,8 @@
                     <option value="quotes">Цитати/Фільми</option>
                 </select>
 
-                <label style="font-size: 12px; color: #555;">Вставте список (формат: Слово - Переклад, кожне з нового рядка):</label>
-                <textarea id="bulk-text" rows="6" placeholder="Apple - Яблуко&#10;Banana - Банан" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; resize: vertical;"></textarea>
+                <label style="font-size: 12px; color: #aaa;">Вставте список (формат: Слово - Переклад, кожне з нового рядка):</label>
+                <textarea id="bulk-text" rows="5" placeholder="Apple - Яблуко&#10;Banana - Банан" style="padding: 8px; border-radius: 4px; font-size: 13px; resize: vertical;"></textarea>
                 
                 <button onclick="addBulkWords()" class="action-btn" style="background-color: #27ae60; margin-top: 5px;">Імпортувати весь список</button>
             </div>
@@ -261,7 +323,120 @@
     </div>
 
     <script>
-        // База слів
+        // Анімація фону з сотами та кольоровими стиками
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        const hexRadius = 35;
+        const hexHeight = Math.sqrt(3) * hexRadius;
+        const hexWidth = 2 * hexRadius;
+        
+        let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.targetX = e.clientX;
+            mouse.targetY = e.clientY;
+        });
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#1abc9c'];
+
+        function drawHexagon(x, y, radius, fillColor, strokeColor) {
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (Math.PI / 3) * i;
+                const hx = x + radius * Math.cos(angle);
+                const hy = y + radius * Math.sin(angle);
+                if (i === 0) ctx.moveTo(hx, hy);
+                else ctx.lineTo(hx, hy);
+            }
+            ctx.closePath();
+            if (fillColor) {
+                ctx.fillStyle = fillColor;
+                ctx.fill();
+            }
+            if (strokeColor) {
+                ctx.strokeStyle = strokeColor;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+        }
+
+        function animateBg() {
+            // Плавний рух курсору (lerp)
+            mouse.x += (mouse.targetX - mouse.x) * 0.1;
+            mouse.y += (mouse.targetY - mouse.y) * 0.1;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const horizDist = hexWidth * 3 / 4;
+            const vertDist = hexHeight;
+
+            const cols = Math.ceil(width / horizDist) + 2;
+            const rows = Math.ceil(height / vertDist) + 2;
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const x = c * horizDist;
+                    const y = r * vertDist + (c % 2 === 0 ? 0 : vertDist / 2);
+
+                    // Відстань до миші для ефекту зміщення та підсвічування
+                    const dx = mouse.x - x;
+                    const dy = mouse.y - y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    let offsetX = 0;
+                    let offsetY = 0;
+                    let isClose = dist < 120;
+
+                    if (isClose) {
+                        const force = (120 - dist) / 120;
+                        // Зміщуємо соту від курсора у випадкові/напрямлені сторони
+                        offsetX = -(dx / dist) * force * 15;
+                        offsetY = -(dy / dist) * force * 15;
+                    }
+
+                    const currentX = x + offsetX;
+                    const currentY = y + offsetY;
+
+                    // Малюємо саму соту
+                    drawHexagon(currentX, currentY, hexRadius - 2, 'rgba(25, 25, 25, 0.7)', isClose ? '#444' : '#222');
+
+                    // Кольорові смужки на стиках при наближенні курсора
+                    if (isClose) {
+                        for (let i = 0; i < 6; i++) {
+                            const angle = (Math.PI / 3) * i;
+                            const hx = currentX + (hexRadius - 2) * Math.cos(angle);
+                            const hy = currentY + (hexRadius - 2) * Math.sin(angle);
+                            
+                            if (i % 2 === 0) {
+                                ctx.beginPath();
+                                ctx.arc(hx, hy, 3, 0, Math.PI * 2);
+                                ctx.fillStyle = colors[(r + c + i) % colors.length];
+                                ctx.shadowBlur = 8;
+                                ctx.shadowColor = ctx.fillStyle;
+                                ctx.fill();
+                                ctx.shadowBlur = 0; // скидання тіні
+                            }
+                        }
+                    }
+                }
+            }
+            requestAnimationFrame(animateBg);
+        }
+        animateBg();
+    </script>
+
+    <!-- Основна логіка додатку -->
+    <script>
         const allWords = [
             // --- КУХНЯ ---
             { en: "Refrigerator", ua: "Холодильник", category: "kitchen" },
@@ -667,11 +842,10 @@
             let customList = JSON.parse(localStorage.getItem("customWords") || "[]");
 
             lines.forEach(line => {
-                // Розділяємо рядок за дефісом (-) або двокрапкою (:)
                 let parts = line.split(/[-–:]/);
                 if (parts.length >= 2) {
                     let en = parts[0].trim();
-                    let ua = parts.slice(1).join(" ").trim(); // на випадок якщо у перекладі є дефіси
+                    let ua = parts.slice(1).join(" ").trim();
 
                     if (en && ua) {
                         const newEntry = { en: en, ua: ua, category: category };
@@ -707,7 +881,7 @@
             }
             showingEn = true;
             document.getElementById("card-text").textContent = activeWords[cardIndex].en;
-            document.getElementById("flashcard").style.backgroundColor = "#ffffff";
+            document.getElementById("flashcard").style.backgroundColor = "rgba(30, 30, 30, 0.9)";
             document.getElementById("card-counter").textContent = `Картка ${cardIndex + 1} з ${activeWords.length}`;
         }
 
@@ -715,10 +889,10 @@
             if (activeWords.length === 0) return;
             if (showingEn) {
                 document.getElementById("card-text").textContent = activeWords[cardIndex].ua;
-                document.getElementById("flashcard").style.backgroundColor = "#e8f8f5";
+                document.getElementById("flashcard").style.backgroundColor = "rgba(20, 50, 40, 0.9)";
             } else {
                 document.getElementById("card-text").textContent = activeWords[cardIndex].en;
-                document.getElementById("flashcard").style.backgroundColor = "#ffffff";
+                document.getElementById("flashcard").style.backgroundColor = "rgba(30, 30, 30, 0.9)";
             }
             showingEn = !showingEn;
         }
