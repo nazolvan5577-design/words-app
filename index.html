@@ -64,6 +64,16 @@
             background-color: #3498db;
             color: white;
         }
+        .teacher-panel {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            width: 420px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            text-align: left;
+        }
         .container {
             background: white;
             padding: 25px;
@@ -170,6 +180,35 @@
 
     <h1>Англійські слова та цитати</h1>
     
+    <!-- Панель для вчителя -->
+    <div class="teacher-panel">
+        <details>
+            <summary style="cursor: pointer; font-weight: bold; color: #27ae60;">Панель вчителя (додати слово)</summary>
+            <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+                <input type="text" id="new-en" placeholder="Англійське слово або фраза" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                <input type="text" id="new-ua" placeholder="Переклад українською" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                <select id="new-cat" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                    <option value="kitchen">Кухня</option>
+                    <option value="bedroom">Спальня</option>
+                    <option value="hallway">Прихожа</option>
+                    <option value="home">Дім</option>
+                    <option value="office">Офіс</option>
+                    <option value="games">Ігри</option>
+                    <option value="household">Побут</option>
+                    <option value="electronics">Електроніка</option>
+                    <option value="toys">Іграшки</option>
+                    <option value="cars">Машини</option>
+                    <option value="building">Будова</option>
+                    <option value="university">Університет</option>
+                    <option value="interview">Інтерв'ю</option>
+                    <option value="tv_films">ТБ і фільми</option>
+                    <option value="quotes">Цитати/Фільми</option>
+                </select>
+                <button onclick="addNewWord()" class="action-btn" style="background-color: #27ae60; margin-top: 5px;">Додати слово до бази</button>
+            </div>
+        </details>
+    </div>
+
     <!-- Вибір категорій -->
     <div class="category-select-box" id="category-buttons">
         <button class="cat-btn active" onclick="changeCategory('all')">Усі</button>
@@ -219,9 +258,9 @@
     </div>
 
     <script>
-        // Велика розгорнута база слів (по ~20 слів на категорію, з подібними перекладами)
+        // Початкова база слів
         const allWords = [
-            // --- КУХНЯ (Kitchen) ---
+            // --- КУХНЯ ---
             { en: "Refrigerator", ua: "Холодильник", category: "kitchen" },
             { en: "Fridge", ua: "Холодильник (скорочено)", category: "kitchen" },
             { en: "Freezer", ua: "Морозильна камера", category: "kitchen" },
@@ -243,7 +282,7 @@
             { en: "To stir", ua: "Помішувати", category: "kitchen" },
             { en: "Recipe", ua: "Кулінарний рецепт", category: "kitchen" },
 
-            // --- СПАЛЬНЯ (Bedroom) ---
+            // --- СПАЛЬНЯ ---
             { en: "Bed", ua: "Ліжко", category: "bedroom" },
             { en: "Mattress", ua: "Матрац", category: "bedroom" },
             { en: "Pillow", ua: "Подушка", category: "bedroom" },
@@ -265,7 +304,7 @@
             { en: "Insomnia", ua: "Безсоння", category: "bedroom" },
             { en: "Pajamas", ua: "Піжама", category: "bedroom" },
 
-            // --- ПРИХОЖА (Hallway) ---
+            // --- ПРИХОЖА ---
             { en: "Hallway", ua: "Коридор, прихожа", category: "hallway" },
             { en: "Corridor", ua: "Коридор", category: "hallway" },
             { en: "Entrance", ua: "Вхід", category: "hallway" },
@@ -287,7 +326,7 @@
             { en: "Sensor light", ua: "Світильник з датчиком руху", category: "hallway" },
             { en: "Shoe polish", ua: "Крем для взуття", category: "hallway" },
 
-            // --- ДІМ (Home) ---
+            // --- ДІМ ---
             { en: "House", ua: "Окремий будинок", category: "home" },
             { en: "Home", ua: "Дім, рідна оселя", category: "home" },
             { en: "Apartment", ua: "Квартира", category: "home" },
@@ -309,11 +348,11 @@
             { en: "Household", ua: "Домогосподарство", category: "home" },
             { en: "Tenant", ua: "Орендар, мешканець", category: "home" },
 
-            // --- ОФІС (Office) ---
+            // --- ОФІС ---
             { en: "Office", ua: "Офіс, робоче місце", category: "office" },
             { en: "Desk", ua: "Письмовий стіл", category: "office" },
             { en: "Office chair", ua: "Офісне крісло", category: "office" },
-            { en: "Laptop", ua: "Портативний комп'ютер, ноутбук", category: "office" },
+            { en: "Laptop", ua: "Ноутбук", category: "office" },
             { en: "Keyboard", ua: "Клавіатура", category: "office" },
             { en: "Mouse", ua: "Мишка комп'ютерна", category: "office" },
             { en: "Monitor", ua: "Монітор, дисплей", category: "office" },
@@ -331,14 +370,14 @@
             { en: "Resignation", ua: "Заява про звільнення", category: "office" },
             { en: "Salary", ua: "Заробітна плата", category: "office" },
 
-            // --- ІГРИ (Games) ---
+            // --- ІГРИ ---
             { en: "Video game", ua: "Відеогра", category: "games" },
             { en: "Gameplay", ua: "Геймплей, ігровий процес", category: "games" },
             { en: "Player", ua: "Гравець", category: "games" },
             { en: "Character", ua: "Ігровий персонаж", category: "games" },
             { en: "Controller", ua: "Ігровий контролер, геймпад", category: "games" },
             { en: "Joystick", ua: "Джойстик", category: "games" },
-            { en: "Headset", ua: "Ігрова гарнітура, навушники з мікрофоном", category: "games" },
+            { en: "Headset", ua: "Ігрова гарнітура", category: "games" },
             { en: "Quest", ua: "Квест, завдання", category: "games" },
             { en: "Achievement", ua: "Досягнення, ачівка", category: "games" },
             { en: "Inventory", ua: "Інвентар, сумка", category: "games" },
@@ -353,8 +392,8 @@
             { en: "Framerate", ua: "Частота кадрів (FPS)", category: "games" },
             { en: "Workshop map", ua: "Мапа майстерні", category: "games" },
 
-            // --- ПОБУТ (Household) ---
-            { en: "Chore", ua: "Домашня справа, побутовий обов'язок", category: "household" },
+            // --- ПОБУТ ---
+            { en: "Chore", ua: "Домашня справа, обов'язок", category: "household" },
             { en: "Cleaning", ua: "Прибирання", category: "household" },
             { en: "Vacuum cleaner", ua: "Пилосос", category: "household" },
             { en: "Washing machine", ua: "Пральна машина", category: "household" },
@@ -364,9 +403,9 @@
             { en: "Detergent", ua: "Мийний засіб, порошок", category: "household" },
             { en: "Broom", ua: "Віник, мітла", category: "household" },
             { en: "Mop", ua: "Швабра для підлоги", category: "household" },
-            { en: "Trash bin", ua: "Сміттєвий відро/кошик", category: "household" },
+            { en: "Trash bin", ua: "Сміттєве відро/кошик", category: "household" },
             { en: "Garbage bag", ua: "Мішок для сміття", category: "household" },
-            { en: "To recycle", ua: "Сортувати, переробляти відходи", category: "household" },
+            { en: "To recycle", ua: "Сортувати, переробляти", category: "household" },
             { en: "Dustpan", ua: "Совок для сміття", category: "household" },
             { en: "Rag", ua: "Ганчірка для пилу", category: "household" },
             { en: "Bed linen", ua: "Постільна білизна", category: "household" },
@@ -375,11 +414,11 @@
             { en: "Maintenance", ua: "Технічне обслуговування", category: "household" },
             { en: "Freshener", ua: "Освіжувач повітря", category: "household" },
 
-            // --- ЕЛЕКТРОНІКА (Electronics) ---
+            // --- ЕЛЕКТРОНІКА ---
             { en: "Electronics", ua: "Електроніка", category: "electronics" },
-            { en: "Smartphone", ua: "Смартфон, мобільний телефон", category: "electronics" },
+            { en: "Smartphone", ua: "Смартфон, мобільний", category: "electronics" },
             { en: "Charger", ua: "Зарядний пристрій", category: "electronics" },
-            { en: "Power bank", ua: "Портативний акумулятор, павербанк", category: "electronics" },
+            { en: "Power bank", ua: "Павербанк", category: "electronics" },
             { en: "Socket", ua: "Електрична розетка", category: "electronics" },
             { en: "Plug", ua: "Штепсельна вилка", category: "electronics" },
             { en: "Extension cord", ua: "Подовжувач", category: "electronics" },
@@ -397,29 +436,29 @@
             { en: "Speaker", ua: "Динамік, колонка", category: "electronics" },
             { en: "Microphone", ua: "Мікрофон", category: "electronics" },
 
-            // --- ІГРАШКИ (Toys) ---
+            // --- ІГРАШКИ ---
             { en: "Toy", ua: "Дитяча іграшка", category: "toys" },
             { en: "Doll", ua: "Лялька", category: "toys" },
             { en: "Teddy bear", ua: "Плюшевий ведмедик", category: "toys" },
             { en: "Action figure", ua: "Колекційна фігурка героя", category: "toys" },
-            { en: "Building blocks", ua: "Будівельні блоки, конструктор", category: "toys" },
+            { en: "Building blocks", ua: "Конструктор, блоки", category: "toys" },
             { en: "Puzzle", ua: "Пазл, головоломка", category: "toys" },
             { en: "Board game", ua: "Настільна гра", category: "toys" },
             { en: "Remote control car", ua: "Машинка на радіокеруванні", category: "toys" },
             { en: "Yo-yo", ua: "Іграшка йо-йо", category: "toys" },
             { en: "Hula hoop", ua: "Гуркіт, обруч", category: "toys" },
-            { en: "Plush toy", ua: "М'ка м'яка іграшка", category: "toys" },
+            { en: "Plush toy", ua: "М'яка іграшка", category: "toys" },
             { en: "Rattle", ua: "Дитяча брязкальце", category: "toys" },
             { en: "Water gun", ua: "Водяний пістолет", category: "toys" },
             { en: "Kite", ua: "Повітряний змій", category: "toys" },
             { en: "Board", ua: "Ігрова дошка", category: "toys" },
-            { en: "Spinning top", ua: "Дзига, дзиґа", category: "toys" },
+            { en: "Spinning top", ua: "Дзига", category: "toys" },
             { en: "Marble", ua: "Скляна кулька для гри", category: "toys" },
             { en: "Toy chest", ua: "Ящик для іграшок", category: "toys" },
             { en: "Inflatable ring", ua: "Надувний круг для плавання", category: "toys" },
             { en: "Playground", ua: "Дитячий майданчик", category: "toys" },
 
-            // --- МАШИНИ (Cars) ---
+            // --- МАШИНИ ---
             { en: "Car", ua: "Легковий автомобіль", category: "cars" },
             { en: "Vehicle", ua: "Транспортний засіб", category: "cars" },
             { en: "Engine", ua: "Автомобільний двигун", category: "cars" },
@@ -441,7 +480,7 @@
             { en: "Driver's license", ua: "Водійське посвідчення", category: "cars" },
             { en: "Traffic lights", ua: "Світлофор", category: "cars" },
 
-            // --- БУДОВА (Building) ---
+            // --- БУДОВА ---
             { en: "Construction", ua: "Будівництво, будова", category: "building" },
             { en: "Foundation", ua: "Фундамент будинку", category: "building" },
             { en: "Brick", ua: "Будівельна цегла", category: "building" },
@@ -463,9 +502,9 @@
             { en: "Architect", ua: "Архітектор", category: "building" },
             { en: "Contractor", ua: "Підрядник, будівельник", category: "building" },
 
-            // --- УНІВЕРСИТЕТ (University) ---
+            // --- УНІВЕРСИТЕТ ---
             { en: "University", ua: "Університет, виш", category: "university" },
-            { en: "Campus", ua: "Університетське містечко (кампус)", category: "university" },
+            { en: "Campus", ua: "Університетське містечко", category: "university" },
             { en: "Lecture", ua: "Лекція в університеті", category: "university" },
             { en: "Professor", ua: "Університетський професор", category: "university" },
             { en: "Student", ua: "Студент", category: "university" },
@@ -474,40 +513,40 @@
             { en: "Assignment", ua: "Письмове завдання", category: "university" },
             { en: "Scholarship", ua: "Академічна стипендія", category: "university" },
             { en: "Dormitory", ua: "Студентський гуртожиток", category: "university" },
-            { en: "Graduation", ua: "Випускний вечір / закінчення вузу", category: "university" },
+            { en: "Graduation", ua: "Випускний вечір", category: "university" },
             { en: "Syllabus", ua: "Навчальний план курсу", category: "university" },
-            { en: "Thesis", ua: "Дипломна / магістерська робота", category: "university" },
+            { en: "Thesis", ua: "Дипломна робота", category: "university" },
             { en: "Research", ua: "Наукове дослідження", category: "university" },
             { en: "Library", ua: "Студентська бібліотека", category: "university" },
             { en: "Faculty", ua: "Факультет", category: "university" },
             { en: "Dean", ua: "Декан факультету", category: "university" },
-            { en: "Major", ua: "Спеціальність, профіль навчання", category: "university" },
+            { en: "Major", ua: "Спеціальність", category: "university" },
             { en: "Attendance", ua: "Відвідуваність занять", category: "university" },
             { en: "Transcript", ua: "Виписка оцінок", category: "university" },
 
-            // --- ІНТЕРВ'Ю (Interview) ---
-            { en: "Job interview", ua: "Співбесіда при прийомі на роботу", category: "interview" },
-            { en: "Interviewer", ua: "Той, хто проводить інтерв'ю (рекрутер)", category: "interview" },
+            // --- ІНТЕРВ'Ю ---
+            { en: "Job interview", ua: "Співбесіда на роботу", category: "interview" },
+            { en: "Interviewer", ua: "Інтерв'юер (рекрутер)", category: "interview" },
             { en: "Candidate", ua: "Кандидат на посаду", category: "interview" },
-            { en: "Resume", ua: "Резюме, автобіографія", category: "interview" },
+            { en: "Resume", ua: "Резюме", category: "interview" },
             { en: "CV (Curriculum Vitae)", ua: "Професійне резюме", category: "interview" },
-            { en: "Cover letter", ua: "Супровідний лист до резюме", category: "interview" },
+            { en: "Cover letter", ua: "Супровідний лист", category: "interview" },
             { en: "Skill", ua: "Професійна навичка, уміння", category: "interview" },
             { en: "Experience", ua: "Досвід роботи", category: "interview" },
-            { en: "Strength", ua: "Сильна сторона характеру/навик", category: "interview" },
+            { en: "Strength", ua: "Сильна сторона", category: "interview" },
             { en: "Weakness", ua: "Слабка сторона", category: "interview" },
-            { en: "Qualification", ua: "Кваліфікація спеціаліста", category: "interview" },
+            { en: "Qualification", ua: "Кваліфікація", category: "interview" },
             { en: "Vacancy", ua: "Вільна вакансія", category: "interview" },
-            { en: "Recruiter", ua: "Рекрутер, фахівець з підбору кадрів", category: "interview" },
-            { en: "Hiring manager", ua: "Менеджер з найму персоналу", category: "interview" },
+            { en: "Recruiter", ua: "Рекрутер", category: "interview" },
+            { en: "Hiring manager", ua: "Менеджер з найму", category: "interview" },
             { en: "Probationary period", ua: "Випробувальний термін", category: "interview" },
             { en: "Advantage", ua: "Перевага над іншими", category: "interview" },
-            { en: "To achieve", ua: "Досягати поставлених цілей", category: "interview" },
+            { en: "To achieve", ua: "Досягати цілей", category: "interview" },
             { en: "Professional goal", ua: "Професійна ціль", category: "interview" },
-            { en: "Self-presentation", ua: "Самопрезентація себе", category: "interview" },
+            { en: "Self-presentation", ua: "Самопрезентація", category: "interview" },
             { en: "Reference", ua: "Рекомендація з попередньої роботи", category: "interview" },
 
-            // --- ТБ І ФІЛЬМИ (TV & Films) ---
+            // --- ТБ І ФІЛЬМИ ---
             { en: "Television", ua: "Телебачення, телевізор", category: "tv_films" },
             { en: "Series", ua: "Серіал, телешоу", category: "tv_films" },
             { en: "Episode", ua: "Серія, епізод серіалу", category: "tv_films" },
@@ -515,42 +554,48 @@
             { en: "Cast", ua: "Акторський склад", category: "tv_films" },
             { en: "Director", ua: "Кінорежисер", category: "tv_films" },
             { en: "Plot", ua: "Сюжет фільму", category: "tv_films" },
-            { en: "Soundtrack", ua: "Музичний супровід, саундтрек", category: "tv_films" },
+            { en: "Soundtrack", ua: "Саундтрек, музика", category: "tv_films" },
             { en: "Trailer", ua: "Кінотрейлер, анонс", category: "tv_films" },
             { en: "Subtitle", ua: "Субтитри", category: "tv_films" },
             { en: "Dubbing", ua: "Дублювання, озвучення", category: "tv_films" },
             { en: "Screenplay", ua: "Кіносценарій", category: "tv_films" },
             { en: "Box office", ua: "Касові збори фільму", category: "tv_films" },
             { en: "Cinematography", ua: "Операторська робота", category: "tv_films" },
-            { en: "Genre", ua: "Жанр твору/фільму", category: "tv_films" },
+            { en: "Genre", ua: "Жанр фільму", category: "tv_films" },
             { en: "Streaming platform", ua: "Стрімінговий сервіс", category: "tv_films" },
-            { en: "Blockbuster", ua: "Касовий блокбастер", category: "tv_films" },
-            { en: "Sequel", ua: "Продовження фільму (сиквел)", category: "tv_films" },
-            { en: "Premise", ua: "Вихідна передумова подій", category: "tv_films" },
-            { en: "CGI (Computer-generated imagery)", ua: "Комп'ютерна графіка у кіно", category: "tv_films" },
+            { en: "Blockbuster", ua: "Блокбастер", category: "tv_films" },
+            { en: "Sequel", ua: "Сиквел, продовження", category: "tv_films" },
+            { en: "Premise", ua: "Передумова подій", category: "tv_films" },
+            { en: "CGI", ua: "Комп'ютерна графіка у кіно", category: "tv_films" },
 
-            // --- КУЛЬТОВІ ДІАЛОГИ ТА ФІЛЬМИ (Quotes & Harry Potter) ---
+            // --- ЦИТАТИ ---
             { en: "You're a wizard, Harry.", ua: "Ти чарівник, Гаррі. (Гаррі Поттер)", category: "quotes" },
-            { en: "Expecto Patronum!", ua: "Експекто Патронум! (Заклинання Патронуса)", category: "quotes" },
-            { en: "Always.", ua: "Завжди. (Северус Снейп, Гаррі Поттер)", category: "quotes" },
-            { en: "Mischief managed.", ua: "Шкоду усунуто. / Шалості вдалися. (Карта мародерів)", category: "quotes" },
-            { en: "May the Force be with you.", ua: "Хай прибуде з тобою Сила! (Зоряні Війни)", category: "quotes" },
+            { en: "Expecto Patronum!", ua: "Експекто Патронум!", category: "quotes" },
+            { en: "Always.", ua: "Завжди. (Северус Снейп)", category: "quotes" },
+            { en: "Mischief managed.", ua: "Шкоду усунуто. (Карта мародерів)", category: "quotes" },
+            { en: "May the Force be with you.", ua: "Хай прибуде з тобою Сила!", category: "quotes" },
             { en: "I'll be back.", ua: "Я повернусь. (Термінатор)", category: "quotes" },
-            { en: "Elementary, my dear Watson.", ua: "Елементарно, мій дорогий Ватсон. (Шерлок Холмс)", category: "quotes" },
-            { en: "To be, or not to be, that is the question.", ua: "Бути чи не бути, ось у чому питання. (Шекспір)", category: "quotes" },
+            { en: "Elementary, my dear Watson.", ua: "Елементарно, мій дорогий Ватсон.", category: "quotes" },
+            { en: "To be, or not to be, that is the question.", ua: "Бути чи не бути, ось у чому питання.", category: "quotes" },
             { en: "Winter is coming.", ua: "Зима близько. (Гра Престолів)", category: "quotes" },
-            { en: "Houston, we have a problem.", ua: "Х'юстон, у нас проблема. (Аполло-13)", category: "quotes" },
-            { en: "Carpe diem. Seize the day.", ua: "Лови момент. Скористайся днем. (Спілка мертвих поетів)", category: "quotes" },
-            { en: "Keep your friends close, but your enemies closer.", ua: "Тримай друзів близько, а ворогів ще ближче. (Хрещений батько)", category: "quotes" },
-            { en: "Why so serious?", ua: "Чому такі серйозні? (Темний Лицар, Джокер)", category: "quotes" },
+            { en: "Houston, we have a problem.", ua: "Х'юстон, у нас проблема.", category: "quotes" },
+            { en: "Carpe diem. Seize the day.", ua: "Лови момент.", category: "quotes" },
+            { en: "Keep your friends close, but your enemies closer.", ua: "Тримай друзів близько, а ворогів ближче.", category: "quotes" },
+            { en: "Why so serious?", ua: "Чому такі серйозні? (Джокер)", category: "quotes" },
             { en: "Hakuna Matata!", ua: "Без турбот! (Король Лев)", category: "quotes" },
-            { en: "Say hello to my little friend!", ua: "Привітайтеся з моїм маленьким другом! (Обличчя зі шрамом)", category: "quotes" },
-            { en: "The truth is out there.", ua: "Істина десь там. (Секретні матеріали)", category: "quotes" },
+            { en: "Say hello to my little friend!", ua: "Привітайтеся з моїм маленьким другом!", category: "quotes" },
+            { en: "The truth is out there.", ua: "Істина десь там.", category: "quotes" },
             { en: "Bazinga!", ua: "Базінга! (Теорія великого вибуху)", category: "quotes" },
-            { en: "Not all those who wander are lost.", ua: "Не кожен, хто блукає, заблукав. (Володар Перснів)", category: "quotes" },
-            { en: "Yer a wizard, a bit of a standard line.", ua: "Ти чарівник, це класична фраза.", category: "quotes" },
+            { en: "Not all those who wander are lost.", ua: "Не кожен, хто блукає, заблукав.", category: "quotes" },
+            { en: "Yer a wizard, a bit of a standard line.", ua: "Ти чарівник, класична фраза.", category: "quotes" },
             { en: "After all this time? - Always.", ua: "Після стількох років? — Завжди.", category: "quotes" }
         ];
+
+        // Завантаження збережених учителем слів із пам'яті браузера
+        const savedWords = localStorage.getItem("customWords");
+        if (savedWords) {
+            allWords.push(...JSON.parse(savedWords));
+        }
 
         let currentCategory = 'all';
         let currentMode = 'cards';
@@ -600,6 +645,37 @@
             } else {
                 document.getElementById('cards-section').style.display = 'none';
                 document.getElementById('test-section').style.display = 'block';
+                startTest();
+            }
+        }
+
+        // --- ФУНКЦІЯ ДОДАВАННЯ СЛІВ УЧИТЕЛЕМ ---
+        function addNewWord() {
+            const en = document.getElementById("new-en").value.trim();
+            const ua = document.getElementById("new-ua").value.trim();
+            const category = document.getElementById("new-cat").value;
+
+            if (!en || !ua) {
+                alert("Будь ласка, заповніть обидва поля (слово і переклад)!");
+                return;
+            }
+
+            const newEntry = { en: en, ua: ua, category: category };
+            allWords.push(newEntry);
+
+            // Зберігаємо тільки додані слова окремо у LocalStorage
+            let customList = JSON.parse(localStorage.getItem("customWords") || "[]");
+            customList.push(newEntry);
+            localStorage.setItem("customWords", JSON.stringify(customList));
+
+            document.getElementById("new-en").value = "";
+            document.getElementById("new-ua").value = "";
+            alert("Слово успішно додано до бази!");
+
+            filterWords();
+            if (currentMode === 'cards') {
+                updateCard();
+            } else {
                 startTest();
             }
         }
@@ -705,7 +781,7 @@
                 document.getElementById("test-result").textContent = "Правильно! 🎉";
                 testScore++;
             } else {
-                document.getElementById("test-result").textContent = "Помилка! ❌";
+                document.getElementById("test-result".textContent = "Помилка! ❌");
             }
 
             document.getElementById("next-test-btn").style.display = "block";
