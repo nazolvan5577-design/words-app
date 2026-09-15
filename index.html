@@ -602,7 +602,25 @@
                         offsetX = -(dx / dist) * force * 15;
                         offsetY = -(dy / dist) * force * 15;
                     }
-                    drawHexagon(x + offsetX, y + offsetY, hexRadius - 2, 'rgba(25, 25, 25, 0.7)', isClose ? '#444' : '#222');
+                    drawHexagon(currentX, currentY, hexRadius - 2, 'rgba(25, 25, 25, 0.7)', isClose ? '#444' : '#222');
+
+                    if (isClose) {
+                        for (let i = 0; i < 6; i++) {
+                            const angle = (Math.PI / 3) * i;
+                            const hx = currentX + (hexRadius - 2) * Math.cos(angle);
+                            const hy = currentY + (hexRadius - 2) * Math.sin(angle);
+                            
+                            if (i % 2 === 0) {
+                                ctx.beginPath();
+                                ctx.arc(hx, hy, 3, 0, Math.PI * 2);
+                                ctx.fillStyle = colors[(r + c + i) % colors.length];
+                                ctx.shadowBlur = 8;
+                                ctx.shadowColor = ctx.fillStyle;
+                                ctx.fill();
+                                ctx.shadowBlur = 0;
+                            }
+                        }
+                    }
                 }
             }
             requestAnimationFrame(animateBg);
