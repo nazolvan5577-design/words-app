@@ -180,14 +180,13 @@
 
     <h1>Англійські слова та цитати</h1>
     
-    <!-- Панель для вчителя -->
+    <!-- Розширена панель вчителя для масового додавання -->
     <div class="teacher-panel">
         <details>
-            <summary style="cursor: pointer; font-weight: bold; color: #27ae60;">Панель вчителя (додати слово)</summary>
+            <summary style="cursor: pointer; font-weight: bold; color: #27ae60;">Панель вчителя (масове додавання слів)</summary>
             <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-                <input type="text" id="new-en" placeholder="Англійське слово або фраза" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-                <input type="text" id="new-ua" placeholder="Переклад українською" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-                <select id="new-cat" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                <label style="font-size: 12px; color: #555;">Виберіть категорію для списку:</label>
+                <select id="bulk-cat" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
                     <option value="kitchen">Кухня</option>
                     <option value="bedroom">Спальня</option>
                     <option value="hallway">Прихожа</option>
@@ -204,7 +203,11 @@
                     <option value="tv_films">ТБ і фільми</option>
                     <option value="quotes">Цитати/Фільми</option>
                 </select>
-                <button onclick="addNewWord()" class="action-btn" style="background-color: #27ae60; margin-top: 5px;">Додати слово до бази</button>
+
+                <label style="font-size: 12px; color: #555;">Вставте список (формат: Слово - Переклад, кожне з нового рядка):</label>
+                <textarea id="bulk-text" rows="6" placeholder="Apple - Яблуко&#10;Banana - Банан" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; resize: vertical;"></textarea>
+                
+                <button onclick="addBulkWords()" class="action-btn" style="background-color: #27ae60; margin-top: 5px;">Імпортувати весь список</button>
             </div>
         </details>
     </div>
@@ -258,7 +261,7 @@
     </div>
 
     <script>
-        // Початкова база слів
+        // База слів
         const allWords = [
             // --- КУХНЯ ---
             { en: "Refrigerator", ua: "Холодильник", category: "kitchen" },
@@ -591,7 +594,7 @@
             { en: "After all this time? - Always.", ua: "Після стількох років? — Завжди.", category: "quotes" }
         ];
 
-        // Завантаження збережених учителем слів із пам'яті браузера
+        // Завантаження збережених слів із LocalStorage
         const savedWords = localStorage.getItem("customWords");
         if (savedWords) {
             allWords.push(...JSON.parse(savedWords));
@@ -649,34 +652,49 @@
             }
         }
 
-        // --- ФУНКЦІЯ ДОДАВАННЯ СЛІВ УЧИТЕЛЕМ ---
-        function addNewWord() {
-            const en = document.getElementById("new-en").value.trim();
-            const ua = document.getElementById("new-ua").value.trim();
-            const category = document.getElementById("new-cat").value;
+        // --- МАСОВЕ ДОДАВАННЯ СЛІВ УЧИТЕЛЕМ ---
+        function addBulkWords() {
+            const text = document.getElementById("bulk-text").value.trim();
+            const category = document.getElementById("bulk-cat").value;
 
-            if (!en || !ua) {
-                alert("Будь ласка, заповніть обидва поля (слово і переклад)!");
+            if (!text) {
+                alert("Будь ласка, вставте список слів!");
                 return;
             }
 
-            const newEntry = { en: en, ua: ua, category: category };
-            allWords.push(newEntry);
-
-            // Зберігаємо тільки додані слова окремо у LocalStorage
+            const lines = text.split("\n");
+            let addedCount = 0;
             let customList = JSON.parse(localStorage.getItem("customWords") || "[]");
-            customList.push(newEntry);
-            localStorage.setItem("customWords", JSON.stringify(customList));
 
-            document.getElementById("new-en").value = "";
-            document.getElementById("new-ua").value = "";
-            alert("Слово успішно додано до бази!");
+            lines.forEach(line => {
+                // Розділяємо рядок за дефісом (-) або двокрапкою (:)
+                let parts = line.split(/[-–:]/);
+                if (parts.length >= 2) {
+                    let en = parts[0].trim();
+                    let ua = parts.slice(1).join(" ").trim(); // на випадок якщо у перекладі є дефіси
 
-            filterWords();
-            if (currentMode === 'cards') {
-                updateCard();
+                    if (en && ua) {
+                        const newEntry = { en: en, ua: ua, category: category };
+                        allWords.push(newEntry);
+                        customList.push(newEntry);
+                        addedCount++;
+                    }
+                }
+            });
+
+            if (addedCount > 0) {
+                localStorage.setItem("customWords", JSON.stringify(customList));
+                document.getElementById("bulk-text").value = "";
+                alert(`Успішно додано нових слів: ${addedCount}!`);
+                
+                filterWords();
+                if (currentMode === 'cards') {
+                    updateCard();
+                } else {
+                    startTest();
+                }
             } else {
-                startTest();
+                alert("Не вдалося розпізнати слова. Перевірте формат: Слово - Переклад (кожне з нового рядка).");
             }
         }
 
@@ -781,7 +799,7 @@
                 document.getElementById("test-result").textContent = "Правильно! 🎉";
                 testScore++;
             } else {
-                document.getElementById("test-result".textContent = "Помилка! ❌");
+                document.getElementById("test-result").textContent = "Помилка! ❌";
             }
 
             document.getElementById("next-test-btn").style.display = "block";
