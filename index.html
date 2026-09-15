@@ -160,6 +160,7 @@
             color: #ddd;
         }
 
+        /* Блок Перший клас з картинками та озвученням */
         .kids-section {
             border: 2px dashed #9b59b6;
             background: rgba(40, 20, 50, 0.4);
@@ -168,7 +169,10 @@
         .kids-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 8px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 4px;
             margin-top: 10px;
         }
 
@@ -176,7 +180,7 @@
             background: rgba(30, 30, 30, 0.9);
             border: 1px solid #555;
             border-radius: 8px;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
@@ -189,15 +193,15 @@
 
         .kids-card img {
             width: 100%;
-            height: 70px;
+            height: 60px;
             object-fit: contain;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             border-radius: 4px;
             background: #fff;
         }
 
         .kids-card span {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             color: #fff;
             display: block;
@@ -422,6 +426,7 @@
 </head>
 <body>
 
+    <!-- Інтерактивний фон із сотами та кольоровим світінням -->
     <canvas id="bg-canvas"></canvas>
 
     <header>
@@ -431,10 +436,10 @@
 
     <div class="main-layout">
         
-        <!-- ЛІВА ПАНЕЛЬ: ВИБІР ТЕМ, ПРАВИЛА ТА ВЧИТЕЛЬ -->
+        <!-- ЛІВА ПАНЕЛЬ -->
         <div class="sidebar">
             
-            <!-- ВИБІР ТЕМ / ЧАСІВ (БОКОВЕ МЕНЮ) -->
+            <!-- ВИБІР ТЕМ -->
             <div class="panel-card">
                 <h3 style="margin-top:0; color:#3498db; font-size:16px;">📚 Вибір тем і розділів</h3>
                 <div class="topics-list" id="sidebar-topics">
@@ -452,7 +457,7 @@
                     <button class="topic-btn" onclick="selectTopic('cars', 'Тема: Машини', 'Автомобільні деталі, рух та транспорт.')">🚗 Машини</button>
                     <button class="topic-btn" onclick="selectTopic('building', 'Тема: Будова', 'Будівельні матеріали та інструменти.')">🧱 Будова</button>
                     <button class="topic-btn" onclick="selectTopic('university', 'Тема: Університет', 'Навчання, лекції, студенти та сесії.')">🎓 Університет</button>
-                    <button class="topic-btn" onclick="selectTopic('interview', 'Тема: Інтерв' 'ю', 'Співбесіда, резюме та професійні навички.')">💼 Інтерв'ю</button>
+                    <button class="topic-btn" onclick="selectTopic('interview', 'Тема: Інтерв\'ю', 'Співбесіда, резюме та професійні навички.')">💼 Інтерв'ю</button>
                     <button class="topic-btn" onclick="selectTopic('tv_films', 'Тема: ТБ і фільми', 'Кіно, серіали, жанри та акторський склад.')">🎬 ТБ і фільми</button>
                     <button class="topic-btn" onclick="selectTopic('quotes', 'Тема: Цитати з фільмів', 'Популярні фрази та висловлювання з кінематографа.')">💬 Цитати</button>
                 </div>
@@ -477,18 +482,31 @@
                 <button onclick="addBulkWords()" class="action-btn" style="background-color: #27ae60; width: 100%;">Додати слова</button>
             </div>
 
-            <!-- БЛОК ДЛЯ СЕСТРИЧКИ -->
+            <!-- БЛОК ПЕРШИЙ КЛАС З КАРТКАМИ ТА ОЗВУЧЕННЯМ -->
             <div class="panel-card kids-section">
-                <h3 style="margin-top:0; color:#9b59b6; font-size:16px;">🎨 Для сестрички (1 клас)</h3>
+                <h3 style="margin-top:0; color:#9b59b6; font-size:15px;">📚 Перший клас (Базові слова)</h3>
+                <p style="font-size: 11px; color: #ddd; margin-bottom: 6px;">Натисни на картку для вивчення:</p>
+                
                 <div class="kids-grid">
-                    <div class="kids-card" onclick="alert('Cat [Кет] — Кіт 🐱')">
+                    <div class="kids-card" onclick="showKidWord('Cat', 'Кіт 🐱', 'Буква C [сі]')">
                         <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=150" alt="Cat">
-                        <span>Cat (Кіт)</span>
+                        <span>Cat - Кіт</span>
                     </div>
-                    <div class="kids-card" onclick="alert('Dog [Дог] — Собака 🐶')">
+                    <div class="kids-card" onclick="showKidWord('Dog', 'Собака 🐶', 'Буква D [ді]')">
                         <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=150" alt="Dog">
-                        <span>Dog (Собака)</span>
+                        <span>Dog - Собака</span>
                     </div>
+                    <div class="kids-card" onclick="showKidWord('Apple', 'Яблуко 🍏', 'Буква A [ей]')">
+                        <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=150" alt="Apple">
+                        <span>Apple - Яблуко</span>
+                    </div>
+                    <div class="kids-card" onclick="showKidWord('Sun', 'Сонце ☀️', 'Буква S [ес]')">
+                        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150" alt="Sun">
+                        <span>Sun - Сонце</span>
+                    </div>
+                </div>
+                
+                <div id="kid-display-box" style="margin-top: 8px; background: rgba(0,0,0,0.6); padding: 6px; border-radius: 6px; text-align: center; font-size: 12px; color: #f1c40f; display: none;">
                 </div>
             </div>
 
@@ -503,7 +521,7 @@
                 <div class="task-content" id="display-tasks">Завантаження...</div>
             </div>
 
-            <!-- Інформаційна граматична картка для обраної теми -->
+            <!-- Інформаційна граматична картка -->
             <div class="grammar-box" id="grammar-box">
                 <h4 id="grammar-title">🌟 Усі теми та слова</h4>
                 <p id="grammar-desc">Виберіть будь-яку тему з лівої панелі для тренування.</p>
@@ -548,8 +566,8 @@
 
     </div>
 
+    <!-- Анімація фону з кольоровим світінням на стиках сот -->
     <script>
-        // Фон соти
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let width, height;
@@ -602,6 +620,10 @@
                         offsetX = -(dx / dist) * force * 15;
                         offsetY = -(dy / dist) * force * 15;
                     }
+
+                    const currentX = x + offsetX;
+                    const currentY = y + offsetY;
+
                     drawHexagon(currentX, currentY, hexRadius - 2, 'rgba(25, 25, 25, 0.7)', isClose ? '#444' : '#222');
 
                     if (isClose) {
@@ -625,11 +647,11 @@
             }
             requestAnimationFrame(animateBg);
         }
-    
+        animateBg();
     </script>
 
+    <!-- Основна освітня логіка сайту -->
     <script>
-        // Повна база усіх твоїх попередніх тем
         const allWords = [
             // Неправильні дієслова
             { en: "Be (was/were, been)", ua: "Бути", category: "verbs" },
@@ -740,7 +762,7 @@
             const savedTask = localStorage.getItem("teacherTaskText");
             const taskBox = document.getElementById("display-tasks");
             const taskInput = document.getElementById("teacher-task-input");
-            const defaultTask = "1. Виберіть потрібну тему в лівій панелі.\n2. Вивчіть слова за картками та перевірте себе в тест-режимі.";
+            const defaultTask = "1. Виберіть потрібну тему в лівій панелі.\n2. Вивчіть слова за картками та перевірте себе в тесті чи міні-грі.";
             taskBox.textContent = savedTask || defaultTask;
             if(taskInput) taskInput.value = savedTask || defaultTask;
         }
@@ -764,6 +786,18 @@
             if (currentMode === 'cards') { cardIndex = 0; updateCard(); }
             else if (currentMode === 'test') { startTest(); }
             else if (currentMode === 'game') { startMatchingGame(); }
+        }
+
+        function showKidWord(en, ua, letterInfo) {
+            const box = document.getElementById('kid-display-box');
+            box.style.display = 'block';
+            box.innerHTML = `<b>✨ ${en}</b> — ${ua}<br><span style="color:#3498db; font-size:11px;">${letterInfo}</span>`;
+            
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(en);
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+            }
         }
 
         function filterWords() {
