@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Англійська платформа: Слова, Завдання та Ігри</title>
+    <title>Family English Academy</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #121212;
             color: #e0e0e0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
             margin: 0;
             padding: 15px;
             overflow-x: hidden;
@@ -21,7 +16,6 @@
             box-sizing: border-box;
         }
 
-        /* Інтерактивний фон з сотами */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -32,12 +26,136 @@
             pointer-events: none;
         }
 
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         h1 {
             color: #ffffff;
-            margin: 10px 0 15px 0;
-            text-align: center;
-            font-size: 24px;
+            margin: 10px 0 5px 0;
+            font-size: 26px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .author-tag {
+            color: #2ecc71;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        .sidebar {
+            width: 350px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 2;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .panel-card {
+            background: rgba(22, 22, 22, 0.92);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left;
+        }
+
+        /* Стилі для вчительської панелі */
+        .teacher-box {
+            border: 2px solid #27ae60;
+            background: rgba(20, 40, 25, 0.5);
+        }
+
+        .task-board {
+            border-left: 4px solid #f39c12;
+            margin-bottom: 20px;
+            max-width: 480px;
+        }
+
+        .task-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #ccc;
+            white-space: pre-wrap;
+            margin-top: 8px;
+        }
+
+        .rule-item {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #444;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .rule-item b {
+            color: #3498db;
+        }
+
+        /* Блок для сестрички */
+        .kids-section {
+            border: 2px dashed #9b59b6;
+            background: rgba(40, 20, 50, 0.4);
+        }
+
+        .kids-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .kids-card {
+            background: rgba(30, 30, 30, 0.9);
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .kids-card:hover {
+            border-color: #9b59b6;
+            transform: scale(1.03);
+        }
+
+        .kids-card img {
+            width: 100%;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        .kids-card span {
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            display: block;
         }
 
         .category-select-box {
@@ -46,8 +164,7 @@
             gap: 6px;
             flex-wrap: wrap;
             justify-content: center;
-            max-width: 750px;
-            z-index: 2;
+            max-width: 480px;
         }
 
         .cat-btn {
@@ -76,15 +193,14 @@
         .mode-buttons {
             margin-bottom: 20px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             justify-content: center;
-            z-index: 2;
         }
 
         .mode-btn {
-            padding: 8px 14px;
-            font-size: 13px;
+            padding: 8px 12px;
+            font-size: 12px;
             cursor: pointer;
             border: 2px solid #3498db;
             border-radius: 6px;
@@ -100,34 +216,17 @@
             box-shadow: 0 0 12px rgba(52, 152, 219, 0.4);
         }
 
-        .teacher-panel, .container, .task-board {
+        .container {
             background: rgba(22, 22, 22, 0.92);
             border: 1px solid #333;
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 12px 32px rgba(0,0,0,0.6);
             width: 100%;
-            max-width: 450px;
-            box-sizing: border-box;
-            text-align: left;
-            z-index: 2;
-            margin-bottom: 20px;
-        }
-
-        .container {
+            max-width: 480px;
             text-align: center;
-        }
-
-        .task-board {
-            border-left: 4px solid #f39c12;
-        }
-
-        .task-content {
-            font-size: 14px;
-            line-height: 1.5;
-            color: #ccc;
-            white-space: pre-wrap;
-            margin-top: 8px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
         }
 
         .card {
@@ -203,7 +302,6 @@
             border-color: #c0392b;
         }
 
-        /* Стилі для міні-гри */
         .game-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -292,199 +390,190 @@
             box-sizing: border-box;
             padding: 8px;
             border-radius: 4px;
+            margin-top: 4px;
+            margin-bottom: 8px;
         }
 
-        @media (max-width: 480px) {
-            body { padding: 10px; }
-            h1 { font-size: 20px; }
-            .cat-btn { font-size: 11px; padding: 5px 10px; }
-            .teacher-panel, .container, .task-board { padding: 15px; }
+        @media (max-width: 850px) {
+            .main-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+            .sidebar {
+                width: 100%;
+                max-width: 480px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Динамічний фон із сотами -->
     <canvas id="bg-canvas"></canvas>
 
-    <h1>Англійська платформа: Навчання та Ігри</h1>
-    
-    <!-- Дошка завдань від вчителя -->
-    <div class="task-board">
-        <div style="font-weight: bold; color: #f39c12; display: flex; justify-content: space-between; align-items: center;">
-            <span>📋 Дошка завдань та матеріалів від вчителя</span>
-        </div>
-        <div class="task-content" id="display-tasks">Завантаження завдань...</div>
-    </div>
+    <header>
+        <h1>Family English Academy 👨‍👩‍👧‍👦</h1>
+        <div class="author-tag">Створено для спільного навчання всієї родини 🚀</div>
+    </header>
 
-    <!-- Панель вчителя (Керування, теми, слова, завдання) -->
-    <div class="teacher-panel">
-        <details>
-            <summary style="cursor: pointer; font-weight: bold; color: #27ae60;">Панель вчителя (Адмін-центр)</summary>
-            <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 12px;">
+    <div class="main-layout">
+        
+        <!-- ЛІВА ПАНЕЛЬ: ВЧИТЕЛЬСЬКИЙ ЦЕНТР, ПРАВИЛА ТА ДЛЯ СЕСТРИЧКИ -->
+        <div class="sidebar">
+            
+            <!-- ОКРЕМА ВЧИТЕЛЬСЬКА ПАНЕЛЬ (Адмін-центр) -->
+            <div class="panel-card teacher-box">
+                <h3 style="margin-top:0; color:#27ae60; font-size:16px;">👩‍🏫 Вчительська панель</h3>
+                <p style="font-size: 11px; color: #aaa; margin-bottom: 10px;">Тут вчитель може додавати нові матеріали та правила:</p>
                 
-                <!-- Блок редагування завдань -->
-                <div style="border-bottom: 1px solid #333; padding-bottom: 10px;">
-                    <label style="font-size: 12px; color: #f39c12; font-weight: bold;">Оновити завдання/текст для читання:</label>
-                    <textarea id="teacher-task-input" rows="3" placeholder="Напишіть завдання або посилання на інтерв'ю..." style="margin-top: 5px; font-size: 13px;"></textarea>
-                    <button onclick="saveTeacherTasks()" class="action-btn" style="background-color: #f39c12; margin-top: 5px; width: 100%;">Зберегти завдання</button>
+                <label style="font-size: 12px; color: #f39c12; font-weight: bold;">Дошка завдань для родини:</label>
+                <textarea id="teacher-task-input" rows="2" placeholder="Завдання на тиждень..."></textarea>
+                <button onclick="saveTeacherTasks()" class="action-btn" style="background-color: #f39c12; margin-bottom: 10px; width: 100%;">Зберегти завдання</button>
+
+                <label style="font-size: 12px; color: #3498db; font-weight: bold;">Додати нове граматичне правило:</label>
+                <input type="text" id="new-rule-title" placeholder="Назва правила (наприклад, Past Simple)">
+                <textarea id="new-rule-desc" rows="2" placeholder="Пояснення правила та приклади..."></textarea>
+                <button onclick="addGrammarRule()" class="action-btn" style="background-color: #3498db; margin-bottom: 10px; width: 100%;">Додати правило</button>
+
+                <label style="font-size: 12px; color: #27ae60; font-weight: bold;">Додати слова у тему:</label>
+                <select id="bulk-cat">
+                    <option value="verbs">Неправильні дієслова</option>
+                    <option value="kitchen">Кухня</option>
+                    <option value="bedroom">Спальня</option>
+                    <option value="home">Дім</option>
+                </select>
+                <textarea id="bulk-text" rows="2" placeholder="Слово - Переклад (кожне з нового рядка)"></textarea>
+                <button onclick="addBulkWords()" class="action-btn" style="background-color: #27ae60; width: 100%;">Додати слова</button>
+            </div>
+
+            <!-- РОЗДІЛ ПРАВИЛ (Динамічний) -->
+            <div class="panel-card">
+                <h3 style="margin-top:0; color:#3498db; font-size:16px;">📖 Граматика та правила</h3>
+                <div id="rules-container">
+                    <!-- Правила підвантажуються автоматично -->
+                </div>
+            </div>
+
+            <!-- БЛОК ДЛЯ СЕСТРИЧКИ -->
+            <div class="panel-card kids-section">
+                <h3 style="margin-top:0; color:#9b59b6; font-size:16px;">🎨 Для сестрички (1 клас)</h3>
+                <p style="font-size: 12px; color: #ddd; margin-bottom: 8px;">Натисни на картку:</p>
+                <div class="kids-grid">
+                    <div class="kids-card" onclick="alert('Cat [Кет] — Кіт 🐱')">
+                        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=150" alt="Cat">
+                        <span>Cat (Кіт)</span>
+                    </div>
+                    <div class="kids-card" onclick="alert('Dog [Дог] — Собака 🐶')">
+                        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=150" alt="Dog">
+                        <span>Dog (Собака)</span>
+                    </div>
+                    <div class="kids-card" onclick="alert('Apple [Епл] — Яблуко 🍏')">
+                        <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=150" alt="Apple">
+                        <span>Apple (Яблуко)</span>
+                    </div>
+                    <div class="kids-card" onclick="alert('Sun [Сан] — Сонце ☀️')">
+                        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150" alt="Sun">
+                        <span>Sun (Сонце)</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ЦЕНТРАЛЬНА ЧАСТИНА: ЗАВДАННЯ, КАРТКИ, ТЕСТИ, ІГРИ -->
+        <div class="content-area">
+
+            <!-- Дошка завдань -->
+            <div class="panel-card task-board">
+                <div style="font-weight: bold; color: #f39c12;">📋 Завдання від вчителя</div>
+                <div class="task-content" id="display-tasks">Завантаження...</div>
+            </div>
+
+            <!-- Вибір тем -->
+            <div class="category-select-box" id="category-buttons">
+                <button class="cat-btn active" onclick="changeCategory('all')">Усі теми</button>
+                <button class="cat-btn" onclick="changeCategory('verbs')">Неправильні дієслова</button>
+                <button class="cat-btn" onclick="changeCategory('kitchen')">Кухня</button>
+                <button class="cat-btn" onclick="changeCategory('bedroom')">Спальня</button>
+                <button class="cat-btn" onclick="changeCategory('home')">Дім</button>
+            </div>
+
+            <!-- Режими -->
+            <div class="mode-buttons">
+                <button class="mode-btn active" id="btn-cards" onclick="switchMode('cards')">🃏 Картки</button>
+                <button class="mode-btn" id="btn-test" onclick="switchMode('test')">📝 Тест</button>
+                <button class="mode-btn" id="btn-game" onclick="switchMode('game')">🎮 Гра</button>
+            </div>
+
+            <div class="container">
+                <div id="cards-section">
+                    <div class="counter" id="card-counter">Картка 1 з 0</div>
+                    <div class="card" id="flashcard" onclick="flipCard()">
+                        <span id="card-text">Завантаження...</span>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="action-btn" onclick="prevCard()">Назад</button>
+                        <button class="action-btn" onclick="nextCard()">Наступна</button>
+                    </div>
                 </div>
 
-                <!-- Блок масового додавання слів -->
-                <div>
-                    <label style="font-size: 12px; color: #aaa;">Виберіть категорію:</label>
-                    <select id="bulk-cat" style="font-size: 14px; margin-top: 3px;">
-                        <option value="verbs">Неправильні дієслова (New)</option>
-                        <option value="kitchen">Кухня</option>
-                        <option value="bedroom">Спальня</option>
-                        <option value="hallway">Прихожа</option>
-                        <option value="home">Дім</option>
-                        <option value="office">Офіс</option>
-                        <option value="games">Ігри</option>
-                        <option value="household">Побут</option>
-                        <option value="electronics">Електроніка</option>
-                        <option value="toys">Іграшки</option>
-                        <option value="cars">Машини</option>
-                        <option value="building">Будова</option>
-                        <option value="university">Університет</option>
-                        <option value="interview">Інтерв'ю</option>
-                        <option value="tv_films">ТБ і фільми</option>
-                        <option value="quotes">Цитати/Фільми</option>
-                    </select>
-
-                    <label style="font-size: 12px; color: #aaa; margin-top: 5px; display: block;">Додати список (Формат: Слово - Переклад):</label>
-                    <textarea id="bulk-text" rows="4" placeholder="Be - Бути&#10;Begin - Починати" style="margin-top: 3px; font-size: 13px;"></textarea>
-                    
-                    <button onclick="addBulkWords()" class="action-btn" style="background-color: #27ae60; margin-top: 5px; width: 100%;">Додати слова до теми</button>
+                <div id="test-section" class="test-box">
+                    <div class="counter" id="test-counter">Питання 1 з 0</div>
+                    <div class="test-word" id="test-question-word">Word</div>
+                    <div id="options-container"></div>
+                    <div class="result-message" id="test-result"></div>
+                    <button class="action-btn" id="next-test-btn" style="width: 100%; margin-top: 10px; display: none;" onclick="nextTestQuestion()">Наступне питання</button>
                 </div>
 
+                <div id="game-section" class="game-box">
+                    <div class="counter" id="game-counter">Знайдіть усі пари слів</div>
+                    <div class="game-grid" id="game-grid-container"></div>
+                    <div class="result-message" id="game-result"></div>
+                    <button class="action-btn" style="width: 100%; display: none; margin-top: 10px;" id="restart-game-btn" onclick="startMatchingGame()">Грати знову</button>
+                </div>
             </div>
-        </details>
-    </div>
 
-    <!-- Вибір категорій (теми) -->
-    <div class="category-select-box" id="category-buttons">
-        <button class="cat-btn active" onclick="changeCategory('all')">Усі теми</button>
-        <button class="cat-btn" onclick="changeCategory('verbs')">Неправильні дієслова</button>
-        <button class="cat-btn" onclick="changeCategory('kitchen')">Кухня</button>
-        <button class="cat-btn" onclick="changeCategory('bedroom')">Спальня</button>
-        <button class="cat-btn" onclick="changeCategory('hallway')">Прихожа</button>
-        <button class="cat-btn" onclick="changeCategory('home')">Дім</button>
-        <button class="cat-btn" onclick="changeCategory('office')">Офіс</button>
-        <button class="cat-btn" onclick="changeCategory('games')">Ігри</button>
-        <button class="cat-btn" onclick="changeCategory('household')">Побут</button>
-        <button class="cat-btn" onclick="changeCategory('electronics')">Електроніка</button>
-        <button class="cat-btn" onclick="changeCategory('toys')">Іграшки</button>
-        <button class="cat-btn" onclick="changeCategory('cars')">Машини</button>
-        <button class="cat-btn" onclick="changeCategory('building')">Будова</button>
-        <button class="cat-btn" onclick="changeCategory('university')">Університет</button>
-        <button class="cat-btn" onclick="changeCategory('interview')">Інтерв'ю</button>
-        <button class="cat-btn" onclick="changeCategory('tv_films')">ТБ і фільми</button>
-        <button class="cat-btn" onclick="changeCategory('quotes')">Цитати/Фільми</button>
-    </div>
-
-    <!-- Перемикач режимів -->
-    <div class="mode-buttons">
-        <button class="mode-btn active" id="btn-cards" onclick="switchMode('cards')">🃏 Режим карток</button>
-        <button class="mode-btn" id="btn-test" onclick="switchMode('test')">📝 Режим тесту</button>
-        <button class="mode-btn" id="btn-game" onclick="switchMode('game')">🎮 Гра «Знайди пару»</button>
-    </div>
-
-    <div class="container">
-        <!-- КАРТКИ -->
-        <div id="cards-section">
-            <div class="counter" id="card-counter">Картка 1 з 0</div>
-            <div class="card" id="flashcard" onclick="flipCard()">
-                <span id="card-text">Завантаження...</span>
-            </div>
-            <div class="nav-buttons">
-                <button class="action-btn" onclick="prevCard()">Назад</button>
-                <button class="action-btn" onclick="nextCard()">Наступна</button>
-            </div>
         </div>
 
-        <!-- ТЕСТ -->
-        <div id="test-section" class="test-box">
-            <div class="counter" id="test-counter">Питання 1 з 0</div>
-            <div class="test-word" id="test-question-word">Word</div>
-            <div id="options-container"></div>
-            <div class="result-message" id="test-result"></div>
-            <button class="action-btn" id="next-test-btn" style="width: 100%; margin-top: 10px; display: none;" onclick="nextTestQuestion()">Наступне питання</button>
-        </div>
-
-        <!-- МІНІ-ІГРИ -->
-        <div id="game-section" class="game-box">
-            <div class="counter" id="game-counter">Знайдіть усі пари слів</div>
-            <div class="game-grid" id="game-grid-container"></div>
-            <div class="result-message" id="game-result"></div>
-            <button class="action-btn" style="width: 100%; display: none; margin-top: 10px;" id="restart-game-btn" onclick="startMatchingGame()">Грати знову</button>
-        </div>
     </div>
 
     <script>
-        // Анімація фону з сотами та кольоровими стиками
+        // Анімація фону соти
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-
         let width, height;
         const hexRadius = 35;
         const hexHeight = Math.sqrt(3) * hexRadius;
         const hexWidth = 2 * hexRadius;
-        
         let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000 };
 
-        window.addEventListener('mousemove', (e) => {
-            mouse.targetX = e.clientX;
-            mouse.targetY = e.clientY;
-        });
+        window.addEventListener('mousemove', (e) => { mouse.targetX = e.clientX; mouse.targetY = e.clientY; });
+        window.addEventListener('touchmove', (e) => { if (e.touches.length > 0) { mouse.targetX = e.touches[0].clientX; mouse.targetY = e.touches[0].clientY; } });
 
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                mouse.targetX = e.touches[0].clientX;
-                mouse.targetY = e.touches[0].clientY;
-            }
-        });
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
 
         const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#1abc9c'];
-
         function drawHexagon(x, y, radius, fillColor, strokeColor) {
             ctx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const angle = (Math.PI / 3) * i;
                 const hx = x + radius * Math.cos(angle);
                 const hy = y + radius * Math.sin(angle);
-                if (i === 0) ctx.moveTo(hx, hy);
-                else ctx.lineTo(hx, hy);
+                if (i === 0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
             }
             ctx.closePath();
-            if (fillColor) {
-                ctx.fillStyle = fillColor;
-                ctx.fill();
-            }
-            if (strokeColor) {
-                ctx.strokeStyle = strokeColor;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-            }
+            if (fillColor) { ctx.fillStyle = fillColor; ctx.fill(); }
+            if (strokeColor) { ctx.strokeStyle = strokeColor; ctx.lineWidth = 1.5; ctx.stroke(); }
         }
 
         function animateBg() {
             mouse.x += (mouse.targetX - mouse.x) * 0.1;
             mouse.y += (mouse.targetY - mouse.y) * 0.1;
-
             ctx.clearRect(0, 0, width, height);
 
             const horizDist = hexWidth * 3 / 4;
             const vertDist = hexHeight;
-
             const cols = Math.ceil(width / horizDist) + 2;
             const rows = Math.ceil(height / vertDist) + 2;
 
@@ -492,43 +581,16 @@
                 for (let c = 0; c < cols; c++) {
                     const x = c * horizDist;
                     const y = r * vertDist + (c % 2 === 0 ? 0 : vertDist / 2);
-
-                    const dx = mouse.x - x;
-                    const dy = mouse.y - y;
+                    const dx = mouse.x - x; const dy = mouse.y - y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    let offsetX = 0;
-                    let offsetY = 0;
-                    let isClose = dist < 120;
+                    let offsetX = 0, offsetY = 0, isClose = dist < 120;
 
                     if (isClose) {
                         const force = (120 - dist) / 120;
                         offsetX = -(dx / dist) * force * 15;
                         offsetY = -(dy / dist) * force * 15;
                     }
-
-                    const currentX = x + offsetX;
-                    const currentY = y + offsetY;
-
-                    drawHexagon(currentX, currentY, hexRadius - 2, 'rgba(25, 25, 25, 0.7)', isClose ? '#444' : '#222');
-
-                    if (isClose) {
-                        for (let i = 0; i < 6; i++) {
-                            const angle = (Math.PI / 3) * i;
-                            const hx = currentX + (hexRadius - 2) * Math.cos(angle);
-                            const hy = currentY + (hexRadius - 2) * Math.sin(angle);
-                            
-                            if (i % 2 === 0) {
-                                ctx.beginPath();
-                                ctx.arc(hx, hy, 3, 0, Math.PI * 2);
-                                ctx.fillStyle = colors[(r + c + i) % colors.length];
-                                ctx.shadowBlur = 8;
-                                ctx.shadowColor = ctx.fillStyle;
-                                ctx.fill();
-                                ctx.shadowBlur = 0;
-                            }
-                        }
-                    }
+                    drawHexagon(x + offsetX, y + offsetY, hexRadius - 2, 'rgba(25, 25, 25, 0.7)', isClose ? '#444' : '#222');
                 }
             }
             requestAnimationFrame(animateBg);
@@ -536,454 +598,85 @@
         animateBg();
     </script>
 
-    <!-- Основна логіка додатку -->
     <script>
-        // База слів із доданою темою неправильних дієслів
         const allWords = [
-            // --- НЕПРАВИЛЬНІ ДІЄСЛОВА ---
             { en: "Be (was/were, been)", ua: "Бути", category: "verbs" },
             { en: "Begin (began, begun)", ua: "Починати", category: "verbs" },
             { en: "Break (broke, broken)", ua: "Ламати", category: "verbs" },
             { en: "Bring (brought, brought)", ua: "Приносити", category: "verbs" },
             { en: "Buy (bought, bought)", ua: "Купувати", category: "verbs" },
-            { en: "Come (came, come)", ua: "Приходити", category: "verbs" },
-            { en: "Do (did, done)", ua: "Робити", category: "verbs" },
-            { en: "Drink (drank, drunk)", ua: "Пити", category: "verbs" },
-            { en: "Eat (ate, eaten)", ua: "Їсти", category: "verbs" },
-            { en: "Go (went, gone)", ua: "Йти, їхати", category: "verbs" },
-            { en: "Have (had, had)", ua: "МАТИ", category: "verbs" },
-            { en: "Make (made, made)", ua: "Створювати, робити", category: "verbs" },
-            { en: "Read (read, read)", ua: "Читати", category: "verbs" },
-            { en: "See (saw, seen)", ua: "Бачити", category: "verbs" },
-            { en: "Take (took, taken)", ua: "Брати", category: "verbs" },
-            { en: "Write (wrote, written)", ua: "Писати", category: "verbs" },
-
-            // --- КУХНЯ ---
             { en: "Refrigerator", ua: "Холодильник", category: "kitchen" },
-            { en: "Fridge", ua: "Холодильник (скорочено)", category: "kitchen" },
-            { en: "Freezer", ua: "Морозильна камера", category: "kitchen" },
-            { en: "Microwave", ua: "Мікрохвильова піч", category: "kitchen" },
-            { en: "To oven bake", ua: "Запікати в духовці", category: "kitchen" },
-            { en: "Stove", ua: "Кухонна плита", category: "kitchen" },
-            { en: "Cutlery", ua: "Столові прибори", category: "kitchen" },
-            { en: "Frying pan", ua: "Сковорідка", category: "kitchen" },
-            { en: "Pot", ua: "Каструля", category: "kitchen" },
-            { en: "Kettle", ua: "Чайник", category: "kitchen" },
-            { en: "To chop", ua: "Дрібно кришити, рубати", category: "kitchen" },
-            { en: "To slice", ua: "Нарізати скибочками", category: "kitchen" },
-            { en: "Cutting board", ua: "Обробна дошка", category: "kitchen" },
-            { en: "Sink", ua: "Мийка, раковина", category: "kitchen" },
-            { en: "Dishwasher", ua: "Посудомийна машина", category: "kitchen" },
-            { en: "Sponge", ua: "Губка для посуду", category: "kitchen" },
-            { en: "Apron", ua: "Кухонний фартух", category: "kitchen" },
-            { en: "Spice", ua: "Пряність, спеція", category: "kitchen" },
-            { en: "To stir", ua: "Помішувати", category: "kitchen" },
-            { en: "Recipe", ua: "Кулінарний рецепт", category: "kitchen" },
-
-            // --- СПАЛЬНЯ ---
+            { en: "Stove", ua: "Плита", category: "kitchen" },
             { en: "Bed", ua: "Ліжко", category: "bedroom" },
-            { en: "Mattress", ua: "Матрац", category: "bedroom" },
-            { en: "Pillow", ua: "Подушка", category: "bedroom" },
-            { en: "Blanket", ua: "Ковдра", category: "bedroom" },
-            { en: "Duval", ua: "Пухова ковдра", category: "bedroom" },
-            { en: "Bedsheet", ua: "Простирадло", category: "bedroom" },
-            { en: "Pillowcase", ua: "Наволочка", category: "bedroom" },
-            { en: "Wardrobe", ua: "Гардеробна шафа", category: "bedroom" },
-            { en: "Closet", ua: "Шафа для одягу", category: "bedroom" },
-            { en: "Nightstand", ua: "Приліжкова тумбочка", category: "bedroom" },
-            { en: "Alarm clock", ua: "Будильник", category: "bedroom" },
-            { en: "Curtains", ua: "Штори, завіски", category: "bedroom" },
-            { en: "Blinds", ua: "Жалюзі", category: "bedroom" },
-            { en: "Hanger", ua: "Вішалка для одягу", category: "bedroom" },
-            { en: "Dresser", ua: "Комод", category: "bedroom" },
-            { en: "Mirror", ua: "Дзеркало", category: "bedroom" },
-            { en: "Rug", ua: "Приліжковий килимок", category: "bedroom" },
-            { en: "To nap", ua: "Дрімати, спати вдень", category: "bedroom" },
-            { en: "Insomnia", ua: "Безсоння", category: "bedroom" },
-            { en: "Pajamas", ua: "Піжама", category: "bedroom" },
-
-            // --- ПРИХОЖА ---
-            { en: "Hallway", ua: "Коридор, прихожа", category: "hallway" },
-            { en: "Corridor", ua: "Коридор", category: "hallway" },
-            { en: "Entrance", ua: "Вхід", category: "hallway" },
-            { en: "Front door", ua: "Вхідні двері", category: "hallway" },
-            { en: "Doormat", ua: "Килимок для ніг біля дверей", category: "hallway" },
-            { en: "Shoe rack", ua: "Полиця для взуття", category: "hallway" },
-            { en: "Coat rack", ua: "Вішалка для пальт", category: "hallway" },
-            { en: "Umbrella stand", ua: "Підставка для парасольок", category: "hallway" },
-            { en: "Key holder", ua: "Ключниця", category: "hallway" },
-            { en: "Shoe horn", ua: "Ложка для взуття", category: "hallway" },
-            { en: "Slippers", ua: "Домашні капці", category: "hallway" },
-            { en: "Peephole", ua: "Дверне вічко", category: "hallway" },
-            { en: "Doorbell", ua: "Дверний дзвінок", category: "hallway" },
-            { en: "Coat hanger", ua: "Плічка для одягу", category: "hallway" },
-            { en: "Boot scraper", ua: "Скребок для брудного взуття", category: "hallway" },
-            { en: "Hall stand", ua: "Передпокій (меблі)", category: "hallway" },
-            { en: "Threshold", ua: "Поріг", category: "hallway" },
-            { en: "To welcome", ua: "Вітати гостей", category: "hallway" },
-            { en: "Sensor light", ua: "Світильник з датчиком руху", category: "hallway" },
-            { en: "Shoe polish", ua: "Крем для взуття", category: "hallway" },
-
-            // --- ДІМ ---
-            { en: "House", ua: "Окремий будинок", category: "home" },
-            { en: "Home", ua: "Дім, рідна оселя", category: "home" },
-            { en: "Apartment", ua: "Квартира", category: "home" },
-            { en: "Roof", ua: "Дах будинку", category: "home" },
-            { en: "Ceiling", ua: "Стеля", category: "home" },
-            { en: "Wall", ua: "Стіна", category: "home" },
-            { en: "Floor", ua: "Підлога", category: "home" },
-            { en: "Window", ua: "Вікно", category: "home" },
-            { en: "Balcony", ua: "Балкон", category: "home" },
-            { en: "Basement", ua: "Підвал, цокольний поверх", category: "home" },
-            { en: "Attic", ua: "Горище", category: "home" },
-            { en: "Yard", ua: "Подвір'я, двір", category: "home" },
-            { en: "Fence", ua: "Огорожа, паркан", category: "home" },
-            { en: "Gate", ua: "Ворота, хвіртка", category: "home" },
-            { en: "Chimney", ua: "Димохід", category: "home" },
-            { en: "Staircase", ua: "Сходи", category: "home" },
-            { en: "Living room", ua: "Вітальня", category: "home" },
-            { en: "Bathroom", ua: "Ванна кімната", category: "home" },
-            { en: "Household", ua: "Домогосподарство", category: "home" },
-            { en: "Tenant", ua: "Орендар, мешканець", category: "home" },
-
-            // --- ОФІС ---
-            { en: "Office", ua: "Офіс, робоче місце", category: "office" },
-            { en: "Desk", ua: "Письмовий стіл", category: "office" },
-            { en: "Office chair", ua: "Офісне крісло", category: "office" },
-            { en: "Laptop", ua: "Ноутбук", category: "office" },
-            { en: "Keyboard", ua: "Клавіатура", category: "office" },
-            { en: "Mouse", ua: "Мишка комп'ютерна", category: "office" },
-            { en: "Monitor", ua: "Монітор, дисплей", category: "office" },
-            { en: "Printer", ua: "Принтер", category: "office" },
-            { en: "Scanner", ua: "Сканнер", category: "office" },
-            { en: "Stapler", ua: "Степлер", category: "office" },
-            { en: "Paper clip", ua: "Скрепка для паперу", category: "office" },
-            { en: "Folder", ua: "Папка для документів", category: "office" },
-            { en: "Document", ua: "Документ", category: "office" },
-            { en: "Colleague", ua: "Колега по роботі", category: "office" },
-            { en: "Boss", ua: "Керівник, начальник", category: "office" },
-            { en: "Deadline", ua: "Кінцевий термін здачі", category: "office" },
-            { en: "Meeting", ua: "Зустріч, нарада", category: "office" },
-            { en: "Presentation", ua: "Презентація", category: "office" },
-            { en: "Resignation", ua: "Заява про звільнення", category: "office" },
-            { en: "Salary", ua: "Заробітна плата", category: "office" },
-
-            // --- ІГРИ ---
-            { en: "Video game", ua: "Відеогра", category: "games" },
-            { en: "Gameplay", ua: "Геймплей, ігровий процес", category: "games" },
-            { en: "Player", ua: "Гравець", category: "games" },
-            { en: "Character", ua: "Ігровий персонаж", category: "games" },
-            { en: "Controller", ua: "Ігровий контролер, геймпад", category: "games" },
-            { en: "Joystick", ua: "Джойстик", category: "games" },
-            { en: "Headset", ua: "Ігрова гарнітура", category: "games" },
-            { en: "Quest", ua: "Квест, завдання", category: "games" },
-            { en: "Achievement", ua: "Досягнення, ачівка", category: "games" },
-            { en: "Inventory", ua: "Інвентар, сумка", category: "games" },
-            { en: "Score", ua: "Рахунок в грі", category: "games" },
-            { en: "Level", ua: "Рівень", category: "games" },
-            { en: "Multiplayer", ua: "Багатокористувацький режим", category: "games" },
-            { en: "Singleplayer", ua: "Одиночна гра", category: "games" },
-            { en: "Save file", ua: "Збереження гри", category: "games" },
-            { en: "Respawn", ua: "Відродження персонажа", category: "games" },
-            { en: "Boss fight", ua: "Бій з босом", category: "games" },
-            { en: "Graphics settings", ua: "Налаштування графіки", category: "games" },
-            { en: "Framerate", ua: "Частота кадрів (FPS)", category: "games" },
-            { en: "Workshop map", ua: "Мапа майстерні", category: "games" },
-
-            // --- ПОБУТ ---
-            { en: "Chore", ua: "Домашня справа, обов'язок", category: "household" },
-            { en: "Cleaning", ua: "Прибирання", category: "household" },
-            { en: "Vacuum cleaner", ua: "Пилосос", category: "household" },
-            { en: "Washing machine", ua: "Пральна машина", category: "household" },
-            { en: "Laundry", ua: "Брудна білизна / прання", category: "household" },
-            { en: "Iron", ua: "Праска", category: "household" },
-            { en: "To iron", ua: "Прасувати одяг", category: "household" },
-            { en: "Detergent", ua: "Мийний засіб, порошок", category: "household" },
-            { en: "Broom", ua: "Віник, мітла", category: "household" },
-            { en: "Mop", ua: "Швабра для підлоги", category: "household" },
-            { en: "Trash bin", ua: "Сміттєве відро/кошик", category: "household" },
-            { en: "Garbage bag", ua: "Мішок для сміття", category: "household" },
-            { en: "To recycle", ua: "Сортувати, переробляти", category: "household" },
-            { en: "Dustpan", ua: "Совок для сміття", category: "household" },
-            { en: "Rag", ua: "Ганчірка для пилу", category: "household" },
-            { en: "Bed linen", ua: "Постільна білизна", category: "household" },
-            { en: "Utility bill", ua: "Комунальний рахунок", category: "household" },
-            { en: "Repair", ua: "Ремонт у будинку", category: "household" },
-            { en: "Maintenance", ua: "Технічне обслуговування", category: "household" },
-            { en: "Freshener", ua: "Освіжувач повітря", category: "household" },
-
-            // --- ЕЛЕКТРОНІКА ---
-            { en: "Electronics", ua: "Електроніка", category: "electronics" },
-            { en: "Smartphone", ua: "Смартфон, мобільний", category: "electronics" },
-            { en: "Charger", ua: "Зарядний пристрій", category: "electronics" },
-            { en: "Power bank", ua: "Павербанк", category: "electronics" },
-            { en: "Socket", ua: "Електрична розетка", category: "electronics" },
-            { en: "Plug", ua: "Штепсельна вилка", category: "electronics" },
-            { en: "Extension cord", ua: "Подовжувач", category: "electronics" },
-            { en: "Adapter", ua: "Перехідник, адаптер", category: "electronics" },
-            { en: "Cable", ua: "Електричний кабель", category: "electronics" },
-            { en: "Router", ua: "Інтернет-роутер", category: "electronics" },
-            { en: "Flash drive", ua: "Флешка, USB-накопичувач", category: "electronics" },
-            { en: "Hard drive", ua: "Жорсткий диск", category: "electronics" },
-            { en: "Solid-state drive", ua: "Твердотільний накопичувач (SSD)", category: "electronics" },
-            { en: "Graphics card", ua: "Відеокарта", category: "electronics" },
-            { en: "Processor", ua: "Центральний процесор (CPU)", category: "electronics" },
-            { en: "Motherboard", ua: "Материнська плата", category: "electronics" },
-            { en: "Battery", ua: "Акумулятор, батарейка", category: "electronics" },
-            { en: "Circuit board", ua: "Електрична плата", category: "electronics" },
-            { en: "Speaker", ua: "Динамік, колонка", category: "electronics" },
-            { en: "Microphone", ua: "Мікрофон", category: "electronics" },
-
-            // --- ІГРАШКИ ---
-            { en: "Toy", ua: "Дитяча іграшка", category: "toys" },
-            { en: "Doll", ua: "Лялька", category: "toys" },
-            { en: "Teddy bear", ua: "Плюшевий ведмедик", category: "toys" },
-            { en: "Action figure", ua: "Колекційна фігурка героя", category: "toys" },
-            { en: "Building blocks", ua: "Конструктор, блоки", category: "toys" },
-            { en: "Puzzle", ua: "Пазл, головоломка", category: "toys" },
-            { en: "Board game", ua: "Настільна гра", category: "toys" },
-            { en: "Remote control car", ua: "Машинка на радіокеруванні", category: "toys" },
-            { en: "Yo-yo", ua: "Іграшка йо-йо", category: "toys" },
-            { en: "Hula hoop", ua: "Гуркіт, обруч", category: "toys" },
-            { en: "Plush toy", ua: "М'яка іграшка", category: "toys" },
-            { en: "Rattle", ua: "Дитяча брязкальце", category: "toys" },
-            { en: "Water gun", ua: "Водяний пістолет", category: "toys" },
-            { en: "Kite", ua: "Повітряний змій", category: "toys" },
-            { en: "Board", ua: "Ігрова дошка", category: "toys" },
-            { en: "Spinning top", ua: "Дзига", category: "toys" },
-            { en: "Marble", ua: "Скляна кулька для гри", category: "toys" },
-            { en: "Toy chest", ua: "Ящик для іграшок", category: "toys" },
-            { en: "Inflatable ring", ua: "Надувний круг для плавання", category: "toys" },
-            { en: "Playground", ua: "Дитячий майданчик", category: "toys" },
-
-            // --- МАШИНИ ---
-            { en: "Car", ua: "Легковий автомобіль", category: "cars" },
-            { en: "Vehicle", ua: "Транспортний засіб", category: "cars" },
-            { en: "Engine", ua: "Автомобільний двигун", category: "cars" },
-            { en: "Steering wheel", ua: "Кермо автомобіля", category: "cars" },
-            { en: "Gearbox", ua: "Коробка передач", category: "cars" },
-            { en: "Windshield", ua: "Лобове скло", category: "cars" },
-            { en: "Headlight", ua: "Фара автомобіля", category: "cars" },
-            { en: "Bumper", ua: "Бампер", category: "cars" },
-            { en: "Tire", ua: "Автомобільна шина", category: "cars" },
-            { en: "Wheel", ua: "Колесо", category: "cars" },
-            { en: "Fuel tank", ua: "Паливний бак", category: "cars" },
-            { en: "Dashboard", ua: "Приладова панель", category: "cars" },
-            { en: "Seatbelt", ua: "Ремінь безпеки", category: "cars" },
-            { en: "Rearview mirror", ua: "Дзеркало заднього виду", category: "cars" },
-            { en: "Gas pedal", ua: "Педаль газу", category: "cars" },
-            { en: "Brake pedal", ua: "Педаль гальма", category: "cars" },
-            { en: "Trunk", ua: "Багажник машини", category: "cars" },
-            { en: "Hood", ua: "Капот автомобіля", category: "cars" },
-            { en: "Driver's license", ua: "Водійське посвідчення", category: "cars" },
-            { en: "Traffic lights", ua: "Світлофор", category: "cars" },
-
-            // --- БУДОВА ---
-            { en: "Construction", ua: "Будівництво, будова", category: "building" },
-            { en: "Foundation", ua: "Фундамент будинку", category: "building" },
-            { en: "Brick", ua: "Будівельна цегла", category: "building" },
-            { en: "Concrete", ua: "Бетон", category: "building" },
-            { en: "Cement", ua: "Цемент", category: "building" },
-            { en: "Scaffolding", ua: "Будівельні риштування", category: "building" },
-            { en: "Trowel", ua: "Будівельна кельма", category: "building" },
-            { en: "Hammer", ua: "Молоток", category: "building" },
-            { en: "Screwdriver", ua: "Викрутка", category: "building" },
-            { en: "Pliers", ua: "Пасатижі, плоскогубці", category: "building" },
-            { en: "Drill", ua: "Електричний дриль", category: "building" },
-            { en: "Saw", ua: "Ручна пила, ножівка", category: "building" },
-            { en: "Measuring tape", ua: "Вимірювальна рулетка", category: "building" },
-            { en: "Nail", ua: "Цвях", category: "building" },
-            { en: "Screw", ua: "Шуруп, саморіз", category: "building" },
-            { en: "Plaster", ua: "Штукатурка", category: "building" },
-            { en: "Drywall", ua: "Гіпсокартон", category: "building" },
-            { en: "Insulation", ua: "Теплоізоляція, утеплювач", category: "building" },
-            { en: "Architect", ua: "Архітектор", category: "building" },
-            { en: "Contractor", ua: "Підрядник, будівельник", category: "building" },
-
-            // --- УНІВЕРСИТЕТ ---
-            { en: "University", ua: "Університет, виш", category: "university" },
-            { en: "Campus", ua: "Університетське містечко", category: "university" },
-            { en: "Lecture", ua: "Лекція в університеті", category: "university" },
-            { en: "Professor", ua: "Університетський професор", category: "university" },
-            { en: "Student", ua: "Студент", category: "university" },
-            { en: "Degree", ua: "Науковий ступінь / диплом", category: "university" },
-            { en: "Exam", ua: "Екзамен, іспит", category: "university" },
-            { en: "Assignment", ua: "Письмове завдання", category: "university" },
-            { en: "Scholarship", ua: "Академічна стипендія", category: "university" },
-            { en: "Dormitory", ua: "Студентський гуртожиток", category: "university" },
-            { en: "Graduation", ua: "Випускний вечір", category: "university" },
-            { en: "Syllabus", ua: "Навчальний план курсу", category: "university" },
-            { en: "Thesis", ua: "Дипломна робота", category: "university" },
-            { en: "Research", ua: "Наукове дослідження", category: "university" },
-            { en: "Library", ua: "Студентська бібліотека", category: "university" },
-            { en: "Faculty", ua: "Факультет", category: "university" },
-            { en: "Dean", ua: "Декан факультету", category: "university" },
-            { en: "Major", ua: "Спеціальність", category: "university" },
-            { en: "Attendance", ua: "Відвідуваність занять", category: "university" },
-            { en: "Transcript", ua: "Виписка оцінок", category: "university" },
-
-            // --- ІНТЕРВ'Ю ---
-            { en: "Job interview", ua: "Співбесіда на роботу", category: "interview" },
-            { en: "Interviewer", ua: "Інтерв'юер (рекрутер)", category: "interview" },
-            { en: "Candidate", ua: "Кандидат на посаду", category: "interview" },
-            { en: "Resume", ua: "Резюме", category: "interview" },
-            { en: "CV (Curriculum Vitae)", ua: "Професійне резюме", category: "interview" },
-            { en: "Cover letter", ua: "Супровідний лист", category: "interview" },
-            { en: "Skill", ua: "Професійна навичка, уміння", category: "interview" },
-            { en: "Experience", ua: "Досвід роботи", category: "interview" },
-            { en: "Strength", ua: "Сильна сторона", category: "interview" },
-            { en: "Weakness", ua: "Слабка сторона", category: "interview" },
-            { en: "Qualification", ua: "Кваліфікація", category: "interview" },
-            { en: "Vacancy", ua: "Вільна вакансія", category: "interview" },
-            { en: "Recruiter", ua: "Рекрутер", category: "interview" },
-            { en: "Hiring manager", ua: "Менеджер з найму", category: "interview" },
-            { en: "Probationary period", ua: "Випробувальний термін", category: "interview" },
-            { en: "Advantage", ua: "Перевага над іншими", category: "interview" },
-            { en: "To achieve", ua: "Досягати цілей", category: "interview" },
-            { en: "Professional goal", ua: "Професійна ціль", category: "interview" },
-            { en: "Self-presentation", ua: "Самопрезентація", category: "interview" },
-            { en: "Reference", ua: "Рекомендація з попередньої роботи", category: "interview" },
-
-            // --- ТБ І ФІЛЬМИ ---
-            { en: "Television", ua: "Телебачення, телевізор", category: "tv_films" },
-            { en: "Series", ua: "Серіал, телешоу", category: "tv_films" },
-            { en: "Episode", ua: "Серія, епізод серіалу", category: "tv_films" },
-            { en: "Season", ua: "Сезон телесеріалу", category: "tv_films" },
-            { en: "Cast", ua: "Акторський склад", category: "tv_films" },
-            { en: "Director", ua: "Кінорежисер", category: "tv_films" },
-            { en: "Plot", ua: "Сюжет фільму", category: "tv_films" },
-            { en: "Soundtrack", ua: "Саундтрек, музика", category: "tv_films" },
-            { en: "Trailer", ua: "Кінотрейлер, анонс", category: "tv_films" },
-            { en: "Subtitle", ua: "Субтитри", category: "tv_films" },
-            { en: "Dubbing", ua: "Дублювання, озвучення", category: "tv_films" },
-            { en: "Screenplay", ua: "Кіносценарій", category: "tv_films" },
-            { en: "Box office", ua: "Касові збори фільму", category: "tv_films" },
-            { en: "Cinematography", ua: "Операторська робота", category: "tv_films" },
-            { en: "Genre", ua: "Жанр фільму", category: "tv_films" },
-            { en: "Streaming platform", ua: "Стрімінговий сервіс", category: "tv_films" },
-            { en: "Blockbuster", ua: "Блокбастер", category: "tv_films" },
-            { en: "Sequel", ua: "Сиквел, продовження", category: "tv_films" },
-            { en: "Premise", ua: "Передумова подій", category: "tv_films" },
-            { en: "CGI", ua: "Комп'ютерна графіка у кіно", category: "tv_films" },
-
-            // --- ЦИТАТИ ---
-            { en: "You're a wizard, Harry.", ua: "Ти чарівник, Гаррі. (Гаррі Поттер)", category: "quotes" },
-            { en: "Expecto Patronum!", ua: "Експекто Патронум!", category: "quotes" },
-            { en: "Always.", ua: "Завжди. (Северус Снейп)", category: "quotes" },
-            { en: "Mischief managed.", ua: "Шкоду усунуто. (Карта мародерів)", category: "quotes" },
-            { en: "May the Force be with you.", ua: "Хай прибуде з тобою Сила!", category: "quotes" },
-            { en: "I'll be back.", ua: "Я повернусь. (Термінатор)", category: "quotes" },
-            { en: "Elementary, my dear Watson.", ua: "Елементарно, мій дорогий Ватсон.", category: "quotes" },
-            { en: "To be, or not to be, that is the question.", ua: "Бути чи не бути, ось у чому питання.", category: "quotes" },
-            { en: "Winter is coming.", ua: "Зима близько. (Гра Престолів)", category: "quotes" },
-            { en: "Houston, we have a problem.", ua: "Х'юстон, у нас проблема.", category: "quotes" },
-            { en: "Carpe diem. Seize the day.", ua: "Лови момент.", category: "quotes" },
-            { en: "Keep your friends close, but your enemies closer.", ua: "Тримай друзів близько, а ворогів ближче.", category: "quotes" },
-            { en: "Why so serious?", ua: "Чому такі серйозні? (Джокер)", category: "quotes" },
-            { en: "Hakuna Matata!", ua: "Без турбот! (Король Лев)", category: "quotes" },
-            { en: "Say hello to my little friend!", ua: "Привітайтеся з моїм маленьким другом!", category: "quotes" },
-            { en: "The truth is out there.", ua: "Істина десь там.", category: "quotes" },
-            { en: "Bazinga!", ua: "Базінга! (Теорія великого вибуху)", category: "quotes" },
-            { en: "Not all those who wander are lost.", ua: "Не кожен, хто блукає, заблукав.", category: "quotes" },
-            { en: "Yer a wizard, a bit of a standard line.", ua: "Ти чарівник, класична фраза.", category: "quotes" },
-            { en: "After all this time? - Always.", ua: "Після стількох років? — Завжди.", category: "quotes" }
+            { en: "House", ua: "Будинок", category: "home" }
         ];
 
-        // Завантаження збережених слів та завдань
+        const defaultRules = [
+            { title: "He, She, It (+ -s / -es)", desc: "У Present Simple до дієслова в 3-й особі однини додається -s: He plays, She goes." },
+            { title: "There is / There are", desc: "There is — для однини (There is a cat), There are — для множини (There are cats)." },
+            { title: "Множина іменників", desc: "Більшість слів отримують -s (cat-cats). На кінці -s, -sh, -ch додають -es (box-boxes)." }
+        ];
+
         const savedWords = localStorage.getItem("customWords");
-        if (savedWords) {
-            allWords.push(...JSON.parse(savedWords));
-        }
+        if (savedWords) allWords.push(...JSON.parse(savedWords));
 
         let currentCategory = 'all';
         let currentMode = 'cards';
         let activeWords = [];
-
         let cardIndex = 0;
         let showingEn = true;
-
         let testIndex = 0;
         let testScore = 0;
         let answered = false;
 
-        // Завантаження завдань вчителя
-        function loadTeacherTasks() {
+        function loadTeacherData() {
+            // Завдання
             const savedTask = localStorage.getItem("teacherTaskText");
             const taskBox = document.getElementById("display-tasks");
             const taskInput = document.getElementById("teacher-task-input");
+            const defaultTask = "1. Опрацюйте нові правила від вчителя.\n2. Вивчіть слова та пройдіть тести всією родиною!";
+            taskBox.textContent = savedTask || defaultTask;
+            if(taskInput) taskInput.value = savedTask || defaultTask;
+
+            // Правила
+            const rulesContainer = document.getElementById("rules-container");
+            let customRules = JSON.parse(localStorage.getItem("customRules") || JSON.stringify(defaultRules));
             
-            if (savedTask) {
-                taskBox.textContent = savedTask;
-                if(taskInput) taskInput.value = savedTask;
-            } else {
-                const defaultTask = "1. Вивчіть блок «Неправильні дієслова».\n2. Пройдіть тест або міні-гру.\n3. Підготуйтеся до обговорення нових тем.";
-                taskBox.textContent = defaultTask;
-                if(taskInput) taskInput.value = defaultTask;
-            }
+            rulesContainer.innerHTML = "";
+            customRules.forEach(rule => {
+                const div = document.createElement("div");
+                div.className = "rule-item";
+                div.innerHTML = `<b>${rule.title}</b><br>${rule.desc}`;
+                rulesContainer.appendChild(div);
+            });
         }
 
         function saveTeacherTasks() {
             const text = document.getElementById("teacher-task-input").value;
             localStorage.setItem("teacherTaskText", text);
-            loadTeacherTasks();
-            alert("Завдання успішно оновлено!");
+            loadTeacherData();
+            alert("Завдання оновлено!");
         }
 
-        function filterWords() {
-            if (currentCategory === 'all') {
-                activeWords = [...allWords];
-            } else {
-                activeWords = allWords.filter(w => w.category === currentCategory);
-            }
+        function addGrammarRule() {
+            const title = document.getElementById("new-rule-title").value.trim();
+            const desc = document.getElementById("new-rule-desc").value.trim();
+            if (!title || !desc) { alert("Заповніть назву та опис правила!"); return; }
+
+            let customRules = JSON.parse(localStorage.getItem("customRules") || JSON.stringify(defaultRules));
+            customRules.push({ title, desc });
+            localStorage.setItem("customRules", JSON.stringify(customRules));
+
+            document.getElementById("new-rule-title").value = "";
+            document.getElementById("new-rule-desc").value = "";
+            loadTeacherData();
+            alert("Нове правило успішно додано!");
         }
 
-        function changeCategory(category) {
-            currentCategory = category;
-            
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            filterWords();
-            
-            if (currentMode === 'cards') {
-                cardIndex = 0;
-                updateCard();
-            } else if (currentMode === 'test') {
-                startTest();
-            } else if (currentMode === 'game') {
-                startMatchingGame();
-            }
-        }
-
-        function switchMode(mode) {
-            currentMode = mode;
-            document.getElementById('btn-cards').classList.toggle('active', mode === 'cards');
-            document.getElementById('btn-test').classList.toggle('active', mode === 'test');
-            document.getElementById('btn-game').classList.toggle('active', mode === 'game');
-            
-            document.getElementById('cards-section').style.display = (mode === 'cards') ? 'block' : 'none';
-            document.getElementById('test-section').style.display = (mode === 'test') ? 'block' : 'none';
-            document.getElementById('game-section').style.display = (mode === 'game') ? 'block' : 'none';
-
-            if (mode === 'cards') {
-                cardIndex = 0;
-                updateCard();
-            } else if (mode === 'test') {
-                startTest();
-            } else if (mode === 'game') {
-                startMatchingGame();
-            }
-        }
-
-        // --- МАСОВЕ ДОДАВАННЯ СЛІВ УЧИТЕЛЕМ ---
         function addBulkWords() {
             const text = document.getElementById("bulk-text").value.trim();
             const category = document.getElementById("bulk-cat").value;
-
-            if (!text) {
-                alert("Будь ласка, вставте список слів!");
-                return;
-            }
+            if (!text) { alert("Вставте список слів!"); return; }
 
             const lines = text.split("\n");
             let addedCount = 0;
@@ -994,7 +687,6 @@
                 if (parts.length >= 2) {
                     let en = parts[0].trim();
                     let ua = parts.slice(1).join(" ").trim();
-
                     if (en && ua) {
                         const newEntry = { en: en, ua: ua, category: category };
                         allWords.push(newEntry);
@@ -1007,21 +699,49 @@
             if (addedCount > 0) {
                 localStorage.setItem("customWords", JSON.stringify(customList));
                 document.getElementById("bulk-text").value = "";
-                alert(`Успішно додано нових слів: ${addedCount}!`);
-                
+                alert(`Додано нових слів: ${addedCount}!`);
                 filterWords();
                 if (currentMode === 'cards') updateCard();
                 else if (currentMode === 'test') startTest();
                 else if (currentMode === 'game') startMatchingGame();
             } else {
-                alert("Не вдалося розпізнати слова. Перевірте формат: Слово - Переклад");
+                alert("Помилка формату. Використовуйте: Слово - Переклад");
             }
         }
 
-        // --- КАРТКИ ---
+        function filterWords() {
+            if (currentCategory === 'all') activeWords = [...allWords];
+            else activeWords = allWords.filter(w => w.category === currentCategory);
+        }
+
+        function changeCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            filterWords();
+            if (currentMode === 'cards') { cardIndex = 0; updateCard(); }
+            else if (currentMode === 'test') { startTest(); }
+            else if (currentMode === 'game') { startMatchingGame(); }
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('btn-cards').classList.toggle('active', mode === 'cards');
+            document.getElementById('btn-test').classList.toggle('active', mode === 'test');
+            document.getElementById('btn-game').classList.toggle('active', mode === 'game');
+            
+            document.getElementById('cards-section').style.display = (mode === 'cards') ? 'block' : 'none';
+            document.getElementById('test-section').style.display = (mode === 'test') ? 'block' : 'none';
+            document.getElementById('game-section').style.display = (mode === 'game') ? 'block' : 'none';
+
+            if (mode === 'cards') { cardIndex = 0; updateCard(); }
+            else if (mode === 'test') { startTest(); }
+            else if (mode === 'game') { startMatchingGame(); }
+        }
+
         function updateCard() {
             if (activeWords.length === 0) {
-                document.getElementById("card-text").textContent = "Немає елементів у цій категорії";
+                document.getElementById("card-text").textContent = "Немає слів у цій категорії";
                 document.getElementById("card-counter").textContent = "0 з 0";
                 return;
             }
@@ -1043,30 +763,12 @@
             showingEn = !showingEn;
         }
 
-        function nextCard() {
-            if (activeWords.length === 0) return;
-            cardIndex = (cardIndex + 1) % activeWords.length;
-            updateCard();
-        }
+        function nextCard() { if (activeWords.length === 0) return; cardIndex = (cardIndex + 1) % activeWords.length; updateCard(); }
+        function prevCard() { if (activeWords.length === 0) return; cardIndex = (cardIndex - 1 + activeWords.length) % activeWords.length; updateCard(); }
 
-        function prevCard() {
-            if (activeWords.length === 0) return;
-            cardIndex = (cardIndex - 1 + activeWords.length) % activeWords.length;
-            updateCard();
-        }
-
-        // --- ТЕСТ ЗІ ЗМІШУВАННЯМ ---
         function startTest() {
-            testIndex = 0;
-            testScore = 0;
-            
-            if (activeWords.length === 0) {
-                document.getElementById("test-section").innerHTML = `
-                    <div class="test-word">Немає елементів для тесту у цій категорії!</div>
-                `;
-                return;
-            }
-
+            testIndex = 0; testScore = 0;
+            if (activeWords.length === 0) { document.getElementById("test-section").innerHTML = `<div class="test-word">Немає слів для тесту!</div>`; return; }
             activeWords.sort(() => Math.random() - 0.5);
             loadTestQuestion();
         }
@@ -1083,15 +785,12 @@
             let options = [currentObj.ua];
             while (options.length < 4 && options.length < allWords.length) {
                 let randomWord = allWords[Math.floor(Math.random() * allWords.length)].ua;
-                if (!options.includes(randomWord)) {
-                    options.push(randomWord);
-                }
+                if (!options.includes(randomWord)) options.push(randomWord);
             }
             options.sort(() => Math.random() - 0.5);
 
             const container = document.getElementById("options-container");
             container.innerHTML = "";
-
             options.forEach(option => {
                 const btn = document.createElement("button");
                 btn.className = "option-btn";
@@ -1104,41 +803,27 @@
         function checkAnswer(btn, selected, correct) {
             if (answered) return;
             answered = true;
-
-            const buttons = document.querySelectorAll(".option-btn");
-            buttons.forEach(b => {
-                if (b.textContent === correct) {
-                    b.classList.add("correct");
-                }
-                if (b.textContent === selected && selected !== correct) {
-                    b.classList.add("wrong");
-                }
+            document.querySelectorAll(".option-btn").forEach(b => {
+                if (b.textContent === correct) b.classList.add("correct");
+                if (b.textContent === selected && selected !== correct) b.classList.add("wrong");
             });
-
-            if (selected === correct) {
-                document.getElementById("test-result").textContent = "Правильно! 🎉";
-                testScore++;
-            } else {
-                document.getElementById("test-result").textContent = "Помилка! ❌";
-            }
-
+            if (selected === correct) { document.getElementById("test-result").textContent = "Правильно! 🎉"; testScore++; }
+            else { document.getElementById("test-result").textContent = "Помилка! ❌"; }
             document.getElementById("next-test-btn").style.display = "block";
         }
 
         function nextTestQuestion() {
             testIndex++;
-            if (testIndex < activeWords.length) {
-                loadTestQuestion();
-            } else {
+            if (testIndex < activeWords.length) { loadTestQuestion(); }
+            else {
                 document.getElementById("test-section").innerHTML = `
                     <div class="test-word">Тест завершено! 🎯</div>
-                    <div style="font-size: 18px; margin-bottom: 20px; text-align: center;">Твій результат: ${testScore} з ${activeWords.length}</div>
+                    <div style="font-size: 18px; margin-bottom: 20px; text-align: center;">Результат: ${testScore} з ${activeWords.length}</div>
                     <button class="action-btn" style="width: 100%;" onclick="switchMode('test')">Пройти знову</button>
                 `;
             }
         }
 
-        // --- МІНІ-ІГРА «ЗНАЙДИ ПАРУ» ---
         let selectedGameCard = null;
         let matchedPairsCount = 0;
         let totalPairsInGame = 0;
@@ -1154,11 +839,10 @@
             matchedPairsCount = 0;
 
             if (activeWords.length < 4) {
-                gridContainer.innerHTML = "<div style='grid-column: span 2; text-align:center; color:#888;'>У цій категорії занадто мало слів для гри (потрібно мінімум 4). Виберіть «Усі теми».</div>";
+                gridContainer.innerHTML = "<div style='grid-column: span 2; text-align:center; color:#888;'>Потрібно мінімум 4 слова у темі. Оберіть «Усі теми».</div>";
                 return;
             }
 
-            // Вибираємо 4 випадкові слова для раунду гри
             let shuffled = [...activeWords].sort(() => Math.random() - 0.5).slice(0, 4);
             totalPairsInGame = shuffled.length;
             document.getElementById("game-counter").textContent = `Знайдіть пари (Залишилось: ${totalPairsInGame})`;
@@ -1168,7 +852,6 @@
                 items.push({ text: item.en, type: 'en', pairId: index });
                 items.push({ text: item.ua, type: 'ua', pairId: index });
             });
-
             items.sort(() => Math.random() - 0.5);
 
             items.forEach(elem => {
@@ -1177,7 +860,6 @@
                 card.textContent = elem.text;
                 card.dataset.pairId = elem.pairId;
                 card.dataset.type = elem.type;
-
                 card.onclick = () => handleGameCardClick(card);
                 gridContainer.appendChild(card);
             });
@@ -1194,7 +876,6 @@
                 const secondCard = card;
 
                 if (firstCard.dataset.pairId === secondCard.dataset.pairId && firstCard.dataset.type !== secondCard.dataset.type) {
-                    // Знайшли пару!
                     firstCard.classList.remove('selected');
                     firstCard.classList.add('matched');
                     secondCard.classList.add('matched');
@@ -1204,11 +885,10 @@
                     document.getElementById("game-counter").textContent = `Знайдіть пари (Залишилось: ${totalPairsInGame - matchedPairsCount})`;
 
                     if (matchedPairsCount === totalPairsInGame) {
-                        document.getElementById("game-result").textContent = "Вітаю! Усі пари знайдено! 🏆";
-                        document.getElementById("restart-game-btn").style.display = "block";
+                        document.getElementById("game-result").textContent = "Чудово! Усі пари знайдено! 🏆";
+                        restartBtn.style.display = "block";
                     }
                 } else {
-                    // Помилка
                     secondCard.classList.add('selected');
                     setTimeout(() => {
                         firstCard.classList.remove('selected');
@@ -1221,7 +901,7 @@
 
         filterWords();
         updateCard();
-        loadTeacherTasks();
+        loadTeacherData();
     </script>
 
 </body>
