@@ -29,11 +29,8 @@ window.onload = function() {
 };
 
 function initCategoriesAndWords() {
-    // Завантаження категорій
     const customCats = JSON.parse(localStorage.getItem("customCategories") || "[]");
     categories = [...defaultCategories, ...customCats];
-
-    // Завантаження слів
     const customWords = JSON.parse(localStorage.getItem("customWords") || "[]");
     allWords = [...baseWords, ...customWords];
 }
@@ -44,179 +41,49 @@ function changeProfile() {
     loadTeacherTasks();
 }
 
-// ВЧИТЕЛЬСЬКА ПАНЕЛЬ: Завдання
-function loadTeacherTasks() {
-    const savedTask = localStorage.getItem(`teacherTask_${currentProfile}`);
-    const taskBox = document.getElementById("display-tasks");
-    const taskInput = document.getElementById("teacher-task-input");
-    const defaultTask = `Вітаємо, ${currentProfile}! 🌟\nОберіть тему ліворуч та виконайте тренування.`;
-    
-    taskBox.textContent = savedTask || defaultTask;
-    if(taskInput) taskInput.value = savedTask || defaultTask;
-}
-
-function saveTeacherTasks() {
-    const text = document.getElementById("teacher-task-input").value;
-    const targetUser = document.getElementById("target-user-select").value;
-    localStorage.setItem(`teacherTask_${targetUser}`, text);
-    if(targetUser === currentProfile) loadTeacherTasks();
-    alert(`Завдання для "${targetUser}" збережено!`);
-}
-
-// ВЧИТЕЛЬСЬКА ПАНЕЛЬ: Створення нової теми
-function createNewTopic() {
-    const nameInput = document.getElementById("new-topic-name");
-    const topicName = nameInput.value.trim();
-    if (!topicName) { alert("Введіть назву нової теми!"); return; }
-
-    const topicId = "custom_" + Date.now();
-    const newCat = {
-        id: topicId,
-        name: "📁 " + topicName,
-        desc: `Авторська тема: ${topicName}`
-    };
-
-    let customCats = JSON.parse(localStorage.getItem("customCategories") || "[]");
-    customCats.push(newCat);
-    localStorage.setItem("customCategories", JSON.stringify(customCats));
-
-    categories.push(newCat);
-    renderTopicsSidebar();
-    renderCategoryDropdown();
-    nameInput.value = "";
-    alert(`Тему "${topicName}" успішно створено! Вона з'явилася у списку.`);
-}
-
-// ВЧИТЕЛЬСЬКА ПАНЕЛЬ: Додавання слів
-function addBulkWords() {
-    const text = document.getElementById("bulk-text").value.trim();
-    const category = document.getElementById("bulk-cat").value;
-    if (!text) { alert("Вставте список слів!"); return; }
-
-    const lines = text.split("\n");
-    let addedCount = 0;
-    let customList = JSON.parse(localStorage.getItem("customWords") || "[]");
-
-    lines.forEach(line => {
-        let parts = line.split(/[-–:]/);
-        if (parts.length >= 2) {
-            let en = parts[0].trim();
-            let ua = parts.slice(1).join(" ").trim();
-            if (en && ua) {
-                const newEntry = { en: en, ua: ua, category: category };
-                allWords.push(newEntry);
-                customList.push(newEntry);
-                addedCount++;
-            }
-        }
-    });
-
-    if (addedCount > 0) {
-        localStorage.setItem("customWords", JSON.stringify(customList));
-        document.getElementById("bulk-text").value = "";
-        alert(`Додано слів: ${addedCount}!`);
-        filterWords();
-        if (currentMode === 'cards') updateCard();
-        else if (currentMode === 'test') startTest();
-        else if (currentMode === 'game') startMatchingGame();
-    } else {
-        alert("Помилка формату. Використовуйте: Слово - Переклад");
-    }
-}
-
-// РЕНДЕР СИСТЕМИ ТЕМ
-function renderTopicsSidebar() {
-    const container = document.getElementById("sidebar-topics");
-    if (!container) return;
-    container.innerHTML = "";
-
-    categories.forEach(cat => {
-        const btn = document.createElement("button");
-        btn.className = `topic-btn ${cat.id === currentCategory ? 'active' : ''}`;
-        btn.textContent = cat.name;
-        btn.onclick = () => selectTopic(cat.id, cat.name, cat.desc, btn);
-        container.appendChild(btn);
-    });
-}
-
-function renderCategoryDropdown() {
-    const select = document.getElementById("bulk-cat");
-    if (!select) return;
-    select.innerHTML = "";
-
-    categories.filter(c => c.id !== 'all').forEach(cat => {
-        const opt = document.createElement("option");
-        opt.value = cat.id;
-        opt.textContent = cat.name;
-        select.appendChild(opt);
-    });
-}
-
-function selectTopic(categoryId, title, desc, btnElement) {
-    currentCategory = categoryId;
-    document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
-    if (btnElement) btnElement.classList.add('active');
-
-    document.getElementById('grammar-title').textContent = title;
-    document.getElementById('grammar-desc').textContent = desc;
-
-    switchView('practice');
-    filterWords();
-    if (currentMode === 'cards') { cardIndex = 0; updateCard(); }
-    else if (currentMode === 'test') { startTest(); }
-    else if (currentMode === 'game') { startMatchingGame(); }
-}
-
-function filterWords() {
-    if (currentCategory === 'all') activeWords = [...allWords];
-    else activeWords = allWords.filter(w => w.category === currentCategory);
-}
-
-function switchView(viewName) {
-    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-    document.getElementById(`view-${viewName}`).classList.add('active');
-}
-
-// ПЕРШИЙ КЛАС
-function renderAlphabet() {
-    const grid = document.getElementById("alphabet-grid");
-    if (!grid) return;
-    grid.innerHTML = "";
-    alphabetData.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "alphabet-card";
-        card.onclick = () => speakWord(item.word, item.ua, item.letter);
-        card.innerHTML = `<div class="letter">${item.letter}</div><div class="icon">${item.icon}</div><div class="word">${item.word}</div>`;
-        grid.appendChild(card);
-    });
-}
-
-function speakWord(en, ua, letter) {
-    const box = document.getElementById("kid-display-box");
-    box.style.display = "block";
-    box.innerHTML = `<b>✨ Буква ${letter}: ${en}</b> — ${ua}`;
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(en);
-        utterance.lang = 'en-US';
-        window.speechSynthesis.speak(utterance);
-    }
-}
-
-// ГРАМАТИКА
+// 1. РЕНДЕР ГРАМАТИКИ ТА МОДАЛЬНЕ ВІКНО
 function renderGrammar() {
     const container = document.getElementById("grammar-topics-container");
     if(!container) return;
     container.innerHTML = "";
     grammarTopics.forEach(g => {
-        const box = document.createElement("div");
-        box.style.cssText = "background: rgba(30, 30, 30, 0.9); padding: 14px; margin-bottom: 12px; border-left: 4px solid #3498db; border-radius: 8px;";
-        box.innerHTML = `<h4 style="color:#3498db; margin:0 0 6px 0;">${g.title}</h4><p style="font-size:13px; color:#ddd; margin:0 0 8px 0;">${g.desc}</p><div style="background:rgba(0,0,0,0.4); padding:6px; font-family:monospace; color:#2ecc71; font-size:12px;">📌 ${g.rule}</div>`;
-        container.appendChild(box);
+        const item = document.createElement("div");
+        item.className = "grammar-card-item";
+        item.onclick = () => openGrammarModal(g.id);
+        item.innerHTML = `
+            <h4>📖 ${g.title}</h4>
+            <p>${g.shortDesc}</p>
+            <div style="font-size: 11px; color: #3498db; margin-top: 8px; font-weight: bold;">Натисніть для повного розбору 🔍</div>
+        `;
+        container.appendChild(item);
     });
 }
 
-// РЕЖИМИ ТРЕНУВАННЯ
+function openGrammarModal(topicId) {
+    const topic = grammarTopics.find(t => t.id === topicId);
+    if (!topic) return;
+
+    document.getElementById("modal-title").textContent = topic.title;
+    document.getElementById("modal-formula").textContent = "📌 Формула: " + topic.formula;
+    document.getElementById("modal-explanation").textContent = topic.explanation;
+    document.getElementById("modal-signals").textContent = topic.signalWords;
+
+    const list = document.getElementById("modal-examples");
+    list.innerHTML = "";
+    topic.examples.forEach(ex => {
+        const li = document.createElement("li");
+        li.textContent = ex;
+        list.appendChild(li);
+    });
+
+    document.getElementById("grammar-modal").classList.add("active");
+}
+
+function closeGrammarModal() {
+    document.getElementById("grammar-modal").classList.remove("active");
+}
+
+// 2. РЕЖИМИ НАВЧАННЯ (КАРТКИ, ТЕСТ, ГРА)
 function switchMode(mode) {
     currentMode = mode;
     document.getElementById('btn-cards').classList.toggle('active', mode === 'cards');
@@ -232,34 +99,25 @@ function switchMode(mode) {
     else if (mode === 'game') { startMatchingGame(); }
 }
 
-function updateCard() {
-    if (activeWords.length === 0) {
-        document.getElementById("card-text").textContent = "Немає слів у цій категорії";
-        document.getElementById("card-counter").textContent = "0 з 0";
-        return;
-    }
-    showingEn = true;
-    document.getElementById("card-text").textContent = activeWords[cardIndex].en;
-    document.getElementById("flashcard").style.backgroundColor = "rgba(30, 30, 30, 0.9)";
-    document.getElementById("card-counter").textContent = `Картка ${cardIndex + 1} з ${activeWords.length}`;
-}
-
-function flipCard() {
-    if (activeWords.length === 0) return;
-    showingEn = !showingEn;
-    document.getElementById("card-text").textContent = showingEn ? activeWords[cardIndex].en : activeWords[cardIndex].ua;
-    document.getElementById("flashcard").style.backgroundColor = showingEn ? "rgba(30, 30, 30, 0.9)" : "rgba(20, 50, 40, 0.9)";
-}
-
-function nextCard() { if (activeWords.length) { cardIndex = (cardIndex + 1) % activeWords.length; updateCard(); } }
-function prevCard() { if (activeWords.length) { cardIndex = (cardIndex - 1 + activeWords.length) % activeWords.length; updateCard(); } }
-
+// 3. ЛОГІКА ТЕСТІВ
 function startTest() {
     testIndex = 0; testScore = 0;
+    const testSec = document.getElementById("test-section");
+    
     if (activeWords.length === 0) {
-        document.getElementById("test-section").innerHTML = `<div class="test-word">Немає слів для тесту!</div>`;
+        testSec.innerHTML = `<div class="test-word">Немає слів для тесту!</div>`;
         return;
     }
+    
+    // Відновлюємо HTML структуру тесту, якщо її було замінено фінальним екраном
+    testSec.innerHTML = `
+        <div class="counter" id="test-counter">Питання 1 з 0</div>
+        <div class="test-word" id="test-question-word">Word</div>
+        <div id="options-container"></div>
+        <div class="result-message" id="test-result"></div>
+        <button class="action-btn" id="next-test-btn" style="width: 100%; margin-top: 10px; display: none;" onclick="nextTestQuestion()">Наступне питання</button>
+    `;
+
     activeWords.sort(() => Math.random() - 0.5);
     loadTestQuestion();
 }
@@ -310,11 +168,12 @@ function nextTestQuestion() {
         document.getElementById("test-section").innerHTML = `
             <div class="test-word">Тест завершено! 🎯</div>
             <div style="font-size: 18px; margin-bottom: 20px; text-align: center; color:#2ecc71;">Результат: ${testScore} з ${activeWords.length}</div>
-            <button class="action-btn" style="width: 100%;" onclick="switchMode('test')">Пройти знову</button>
+            <button class="action-btn" style="width: 100%;" onclick="startTest()">Пройти знову</button>
         `;
     }
 }
 
+// 4. ЛОГІКА ГРИ (ПОШУК ПАР)
 function startMatchingGame() {
     const gridContainer = document.getElementById("game-grid-container");
     const resultMsg = document.getElementById("game-result");
@@ -386,88 +245,175 @@ function handleGameCardClick(card) {
     }
 }
 
-// АНІМАЦІЯ СОТ
+// 5. ВЧИТЕЛЬСЬКА ПАНЕЛЬ
+function loadTeacherTasks() {
+    const savedTask = localStorage.getItem(`teacherTask_${currentProfile}`);
+    const taskBox = document.getElementById("display-tasks");
+    const taskInput = document.getElementById("teacher-task-input");
+    const defaultTask = `Вітаємо, ${currentProfile}! 🌟\nОберіть потрібний розділ ліворуч для навчання.`;
+    taskBox.textContent = savedTask || defaultTask;
+    if(taskInput) taskInput.value = savedTask || defaultTask;
+}
+
+function saveTeacherTasks() {
+    const text = document.getElementById("teacher-task-input").value;
+    const targetUser = document.getElementById("target-user-select").value;
+    localStorage.setItem(`teacherTask_${targetUser}`, text);
+    if(targetUser === currentProfile) loadTeacherTasks();
+    alert(`Завдання для "${targetUser}" збережено!`);
+}
+
+function createNewTopic() {
+    const topicName = document.getElementById("new-topic-name").value.trim();
+    if (!topicName) { alert("Введіть назву теми!"); return; }
+    const topicId = "custom_" + Date.now();
+    const newCat = { id: topicId, name: "📁 " + topicName, desc: `Авторська тема: ${topicName}` };
+    
+    let customCats = JSON.parse(localStorage.getItem("customCategories") || "[]");
+    customCats.push(newCat);
+    localStorage.setItem("customCategories", JSON.stringify(customCats));
+    categories.push(newCat);
+    
+    renderTopicsSidebar();
+    renderCategoryDropdown();
+    document.getElementById("new-topic-name").value = "";
+    alert(`Тему "${topicName}" створено!`);
+}
+
+function addBulkWords() {
+    const text = document.getElementById("bulk-text").value.trim();
+    const category = document.getElementById("bulk-cat").value;
+    if (!text) return;
+    const lines = text.split("\n");
+    let addedCount = 0;
+    let customList = JSON.parse(localStorage.getItem("customWords") || "[]");
+
+    lines.forEach(line => {
+        let parts = line.split(/[-–:]/);
+        if (parts.length >= 2) {
+            let en = parts[0].trim();
+            let ua = parts.slice(1).join(" ").trim();
+            if (en && ua) {
+                const newEntry = { en, ua, category };
+                allWords.push(newEntry);
+                customList.push(newEntry);
+                addedCount++;
+            }
+        }
+    });
+
+    if (addedCount > 0) {
+        localStorage.setItem("customWords", JSON.stringify(customList));
+        document.getElementById("bulk-text").value = "";
+        alert(`Додано слів: ${addedCount}`);
+        filterWords();
+        updateCard();
+    }
+}
+
+// 6. ДОПОМІЖНІ ФУНКЦІЇ НАВІГАЦІЇ
+function renderTopicsSidebar() {
+    const container = document.getElementById("sidebar-topics");
+    if (!container) return;
+    container.innerHTML = "";
+    categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = `topic-btn ${cat.id === currentCategory ? 'active' : ''}`;
+        btn.textContent = cat.name;
+        btn.onclick = () => selectTopic(cat.id, cat.name, cat.desc, btn);
+        container.appendChild(btn);
+    });
+}
+
+function renderCategoryDropdown() {
+    const select = document.getElementById("bulk-cat");
+    if (!select) return;
+    select.innerHTML = "";
+    categories.filter(c => c.id !== 'all').forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat.id; opt.textContent = cat.name;
+        select.appendChild(opt);
+    });
+}
+
+function selectTopic(categoryId, title, desc, btnElement) {
+    currentCategory = categoryId;
+    document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+    if (btnElement) btnElement.classList.add('active');
+    document.getElementById('grammar-title').textContent = title;
+    document.getElementById('grammar-desc').textContent = desc;
+    switchView('practice');
+    filterWords();
+    if (currentMode === 'cards') updateCard();
+    else if (currentMode === 'test') startTest();
+    else if (currentMode === 'game') startMatchingGame();
+}
+
+function filterWords() {
+    if (currentCategory === 'all') activeWords = [...allWords];
+    else activeWords = allWords.filter(w => w.category === currentCategory);
+}
+
+function switchView(viewName) {
+    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+    document.getElementById(`view-${viewName}`).classList.add('active');
+}
+
+function renderAlphabet() {
+    const grid = document.getElementById("alphabet-grid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    alphabetData.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "alphabet-card";
+        card.onclick = () => speakWord(item.word, item.ua, item.letter);
+        card.innerHTML = `<div class="letter">${item.letter}</div><div class="icon">${item.icon}</div><div>${item.word}</div>`;
+        grid.appendChild(card);
+    });
+}
+
+function speakWord(en, ua, letter) {
+    const box = document.getElementById("kid-display-box");
+    box.style.display = "block";
+    box.innerHTML = `<b>Буква ${letter}: ${en}</b> — ${ua}`;
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(en);
+        utterance.lang = 'en-US';
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+function updateCard() {
+    if (activeWords.length === 0) {
+        document.getElementById("card-text").textContent = "Немає слів у цій категорії";
+        document.getElementById("card-counter").textContent = "0 з 0";
+        return;
+    }
+    showingEn = true;
+    document.getElementById("card-text").textContent = activeWords[cardIndex].en;
+    document.getElementById("card-counter").textContent = `Картка ${cardIndex + 1} з ${activeWords.length}`;
+}
+
+function flipCard() {
+    if (activeWords.length === 0) return;
+    showingEn = !showingEn;
+    document.getElementById("card-text").textContent = showingEn ? activeWords[cardIndex].en : activeWords[cardIndex].ua;
+}
+
+function nextCard() { if (activeWords.length) { cardIndex = (cardIndex + 1) % activeWords.length; updateCard(); } }
+function prevCard() { if (activeWords.length) { cardIndex = (cardIndex - 1 + activeWords.length) % activeWords.length; updateCard(); } }
+
 function initCanvasBg() {
     const canvas = document.getElementById('bg-canvas');
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
     let width, height;
-    const hexRadius = 35;
-    const hexHeight = Math.sqrt(3) * hexRadius;
-    const hexWidth = 2 * hexRadius;
-    let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000 };
-
-    window.addEventListener('mousemove', (e) => { mouse.targetX = e.clientX; mouse.targetY = e.clientY; });
-    window.addEventListener('touchmove', (e) => { if (e.touches.length > 0) { mouse.targetX = e.touches[0].clientX; mouse.targetY = e.touches[0].clientY; } });
-
     function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#1abc9c'];
-
-    function drawHexagon(x, y, radius, fillColor, strokeColor) {
-        ctx.beginPath();
-        for (let i = 0; i < 6; i++) {
-            const angle = (Math.PI / 3) * i;
-            const hx = x + radius * Math.cos(angle);
-            const hy = y + radius * Math.sin(angle);
-            if (i === 0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
-        }
-        ctx.closePath();
-        if (fillColor) { ctx.fillStyle = fillColor; ctx.fill(); }
-        if (strokeColor) { ctx.strokeStyle = strokeColor; ctx.lineWidth = 1.5; ctx.stroke(); }
-    }
-
-    function animateBg() {
-        mouse.x += (mouse.targetX - mouse.x) * 0.1;
-        mouse.y += (mouse.targetY - mouse.y) * 0.1;
+    window.addEventListener('resize', resize); resize();
+    function animate() {
         ctx.clearRect(0, 0, width, height);
-
-        const horizDist = hexWidth * 3 / 4;
-        const vertDist = hexHeight;
-        const cols = Math.ceil(width / horizDist) + 2;
-        const rows = Math.ceil(height / vertDist) + 2;
-
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) {
-                const x = c * horizDist;
-                const y = r * vertDist + (c % 2 === 0 ? 0 : vertDist / 2);
-                const dx = mouse.x - x; const dy = mouse.y - y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                let offsetX = 0, offsetY = 0, isClose = dist < 120;
-
-                if (isClose) {
-                    const force = (120 - dist) / 120;
-                    offsetX = -(dx / dist) * force * 15;
-                    offsetY = -(dy / dist) * force * 15;
-                }
-
-                const currentX = x + offsetX;
-                const currentY = y + offsetY;
-
-                drawHexagon(currentX, currentY, hexRadius - 2, 'rgba(25, 25, 25, 0.7)', isClose ? '#444' : '#222');
-
-                if (isClose) {
-                    for (let i = 0; i < 6; i++) {
-                        const angle = (Math.PI / 3) * i;
-                        const hx = currentX + (hexRadius - 2) * Math.cos(angle);
-                        const hy = currentY + (hexRadius - 2) * Math.sin(angle);
-                        
-                        if (i % 2 === 0) {
-                            ctx.beginPath();
-                            ctx.arc(hx, hy, 3, 0, Math.PI * 2);
-                            ctx.fillStyle = colors[(r + c + i) % colors.length];
-                            ctx.shadowBlur = 8;
-                            ctx.shadowColor = ctx.fillStyle;
-                            ctx.fill();
-                            ctx.shadowBlur = 0;
-                        }
-                    }
-                }
-            }
-        }
-        requestAnimationFrame(animateBg);
+        requestAnimationFrame(animate);
     }
-    animateBg();
+    animate();
 }
