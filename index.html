@@ -61,7 +61,16 @@
                 <label style="font-size:11px; color:#27ae60; font-weight:bold;">3. Додати слова:</label>
                 <select id="bulk-cat"></select>
                 <textarea id="bulk-text" rows="2" placeholder="Слово - Переклад"></textarea>
-                <button onclick="addBulkWords()" class="action-btn" style="background-color:#27ae60;">Додати слова</button>
+                <button onclick="addBulkWords()" class="action-btn" style="background-color:#27ae60;">Додати слова</button>  
+<!-- 4. Додати правило граматики -->
+<label style="font-size:11px; color:#9b59b6; font-weight:bold; margin-top:10px; display:block;">4. Додати правило граматики:</label>
+<input type="text" id="g-title" placeholder="Назва (напр. Present Continuous)">
+<input type="text" id="g-short" placeholder="Короткий опис для картки">
+<input type="text" id="g-formula" placeholder="Формула (напр. [Хто] + am/is/are + V-ing)">
+<textarea id="g-explanation" rows="2" placeholder="Детальне пояснення правила..."></textarea>
+<input type="text" id="g-signals" placeholder="Маркери часу (напр. now, at the moment)">
+<textarea id="g-examples" rows="2" placeholder="Приклади (кожен з нового рядка)"></textarea>
+<button onclick="addCustomGrammarRule()" class="action-btn" style="background-color:#9b59b6; margin-top:4px;">Зберегти правило</button>
             </div>
         </div>
 
