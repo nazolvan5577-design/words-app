@@ -1,4 +1,4 @@
-// Повний алфавіт для Першого класу (A-Z)
+// 1. ПОВНИЙ АЛФАВІТ ДЛЯ ДІТЕЙ (A-Z)
 const alphabetData = [
     { letter: 'A', word: 'Apple', ua: 'Яблуко 🍏', icon: '🍎' },
     { letter: 'B', word: 'Ball', ua: 'М\'яч ⚽', icon: '⚽' },
@@ -28,36 +28,39 @@ const alphabetData = [
     { letter: 'Z', word: 'Zebra', ua: 'Зебра 🦓', icon: '🦓' }
 ];
 
-// Правила граматики
+// 2. ГРАМАТИЧНІ ТЕМИ
 const grammarTopics = [
-    { id: 'to_be', title: 'Дієслово To Be (Am / Is / Are)', desc: 'Основне дієслово «бути». Вживається для опису стану, імені чи професії.', rule: 'I am / He, She, It is / We, You, They are' },
-    { id: 'present_simple', title: 'Present Simple (Теперішній простий)', desc: 'Використовується для щоденних дій, звичок та загальних фактів.', rule: 'V1 (для He/She/It додаємо -s/-es). Допоміжні: Do / Does' },
-    { id: 'past_simple', title: 'Past Simple (Минулий простий)', desc: 'Використовується для дій, які завершилися в минулому.', rule: 'V2 (правильні +ed, неправильні — 2 форма). Допоміжне: Did' },
-    { id: 'future_simple', title: 'Future Simple (Майбутній простий)', desc: 'Обіцянки, спонтанні рішення або прогнози.', rule: 'Will + V1' }
+    { id: 'to_be', title: 'Дієслово To Be (Am / Is / Are)', desc: 'Основне дієслово «бути». Опис стану, імені чи професії.', rule: 'I am / He, She, It is / We, You, They are' },
+    { id: 'present_simple', title: 'Present Simple (Теперішній простий)', desc: 'Щоденні дії, звички та загальні факти.', rule: 'V1 (для He/She/It додаємо -s/-es). Допоміжні: Do / Does' },
+    { id: 'past_simple', title: 'Past Simple (Минулий простий)', desc: 'Дії, які повністю завершилися в минулому.', rule: 'V2 (правильні +ed, неправильні — 2 форма). Допоміжне: Did' },
+    { id: 'future_simple', title: 'Future Simple (Майбутній простий)', desc: 'Обіцянки, спонтанні рішення та прогнози.', rule: 'Will + V1' }
 ];
 
-// Базовий список категорій
+// 3. ПОВНИЙ КАТАЛОГ ТЕМ (20 СТАБІЛЬНИХ КАТЕГОРІЙ)
 const defaultCategories = [
-    { id: 'all', name: '🌟 Усі теми та слова', desc: 'Виберіть будь-яку тему з бази для тренування.' },
-    { id: 'verbs', name: '⚡ Неправильні дієслова', desc: 'Основні неправильні дієслова у трьох формах.' },
-    { id: 'kitchen', name: '🍳 Кухня', desc: 'Слова та фрази, пов\'язані з кухонним побутом.' },
-    { id: 'bedroom', name: '🛏️ Спальня', desc: 'Предмети інтер\'єру спальної кімнати та сон.' },
-    { id: 'hallway', name: '🚪 Прихожа', desc: 'Передпокій, вхідні двері, взуття та вішалки.' },
-    { id: 'home', name: '🏠 Дім', desc: 'Загальні поняття про будинок та кімнати.' },
-    { id: 'office', name: '💻 Офіс', desc: 'Робоче місце, технічне приладдя та документи.' },
-    { id: 'games', name: '🎮 Ігри', desc: 'Геймплей, персонажі та ігрова термінологія.' },
-    { id: 'household', name: '🧹 Побут', desc: 'Домашні справи, прибирання та побутова техніка.' },
-    { id: 'electronics', name: '⚡ Електроніка', desc: 'Гаджети, розетки, кабелі та деталі ПК.' },
-    { id: 'toys', name: '🧸 Іграшки', desc: 'Дитячі іграшки, конструктори та розваги.' },
-    { id: 'cars', name: '🚗 Машини', desc: 'Автомобільні деталі, рух та транспорт.' },
-    { id: 'building', name: '🧱 Будова', desc: 'Будівельні матеріали та інструменти.' },
-    { id: 'university', name: '🎓 Університет', desc: 'Навчання, лекції, студенти та сесії.' },
-    { id: 'interview', name: '💼 Інтерв\'ю', desc: 'Співбесіда, резюме та професійні навички.' },
-    { id: 'tv_films', name: '🎬 ТБ і фільми', desc: 'Кіно, серіали, жанри та акторський склад.' },
-    { id: 'quotes', name: '💬 Цитати з фільмів', desc: 'Популярні фрази та висловлювання з кінематографа.' }
+    { id: 'all', name: '🌟 Усі теми та слова', desc: 'Загальна база всіх слів для комплексного тестування.' },
+    { id: 'verbs', name: '⚡ Неправильні дієслова', desc: 'Три форми основних неправильних дієслів.' },
+    { id: 'kitchen', name: '🍳 Кухня та Готування', desc: 'Посуд, кухонна техніка, спеції та кулінарія.' },
+    { id: 'bedroom', name: '🛏️ Спальня та Сон', desc: 'Меблі, білизна та предмети відпочинку.' },
+    { id: 'hallway', name: '🚪 Прихожа та Вхід', desc: 'Передпокій, взуття, шафи та вішалки.' },
+    { id: 'home', name: '🏠 Дім та Архітектура', desc: 'Кімнати, конструкція будинку, матеріал стін.' },
+    { id: 'office', name: '💻 Офіс та Робота', desc: 'Робоче місце, технічні засоби, канцелярія.' },
+    { id: 'games', name: '🎮 Ігри та Геймінг', desc: 'Термінологія відеоігор, механіки та залізо.' },
+    { id: 'household', name: '🧹 Побут та Прибирання', desc: 'Чистота, домашні справи, побутова хімія.' },
+    { id: 'electronics', name: '⚡ Електроніка та Гаджети', desc: 'Комп\'ютерні комплектуючі, девайси, мережа.' },
+    { id: 'toys', name: '🧸 Дитячі Іграшки', desc: 'Конструктори, ляльки, розваги для дітей.' },
+    { id: 'cars', name: '🚗 Машини та Транспорт', desc: 'Деталі авто, механіка, автодорожній рух.' },
+    { id: 'building', name: '🧱 Будівництво та Ремонт', desc: 'Інструменти, матеріали, монтажні роботи.' },
+    { id: 'university', name: '🎓 Університет та Наука', desc: 'Лекції, іспити, академічна термінологія.' },
+    { id: 'interview', name: '💼 Співбесіда та Кар\'єра', desc: 'Резюме, навички, ділові переговори.' },
+    { id: 'tv_films', name: '🎬 Кіно та Серіали', desc: 'Жанри, саундтреки, акторський склад.' },
+    { id: 'food', name: '🍎 Їжа та Продукти', desc: 'Фрукти, овочі, м\'ясо, напої та страви.' },
+    { id: 'travel', name: '✈️ Подорожі та Готелі', desc: 'Аеропорт, вокзал, туризм, бронювання.' },
+    { id: 'health', name: '🏥 Здоров\'я та Медицина', desc: 'Тіло людини, симптоми, аптека, лікарі.' },
+    { id: 'emotions', name: '🎭 Емоції та Характер', desc: 'Почуття, риси характеру, настрої.' }
 ];
 
-// Повний словник (усі слова відновлено)
+// 4. СЛОВНИКОВА БАЗА СЛІВ (ОСНОВА + АВТОНАПОВНЕННЯ)
 const baseWords = [
     // Неправильні дієслова
     { en: "Be (was/were, been)", ua: "Бути", category: "verbs" },
@@ -65,13 +68,13 @@ const baseWords = [
     { en: "Break (broke, broken)", ua: "Ламати", category: "verbs" },
     { en: "Bring (brought, brought)", ua: "Приносити", category: "verbs" },
     { en: "Buy (bought, bought)", ua: "Купувати", category: "verbs" },
-    { en: "Come (came, come)", ua: "Приходити", category: "verbs" },
+    { en: "Choose (chose, chosen)", ua: "Вибирати", category: "verbs" },
     { en: "Do (did, done)", ua: "Робити", category: "verbs" },
     { en: "Eat (ate, eaten)", ua: "Їсти", category: "verbs" },
+    { en: "Find (found, found)", ua: "Знаходити", category: "verbs" },
     { en: "Go (went, gone)", ua: "Йти, їхати", category: "verbs" },
     { en: "Have (had, had)", ua: "Мати", category: "verbs" },
     { en: "Make (made, made)", ua: "Створювати", category: "verbs" },
-    { en: "Read (read, read)", ua: "Читати", category: "verbs" },
 
     // Кухня
     { en: "Refrigerator", ua: "Холодильник", category: "kitchen" },
@@ -79,75 +82,26 @@ const baseWords = [
     { en: "Stove", ua: "Плита", category: "kitchen" },
     { en: "Frying pan", ua: "Сковорідка", category: "kitchen" },
     { en: "Kettle", ua: "Чайник", category: "kitchen" },
+    { en: "Cutting board", ua: "Обробна дошка", category: "kitchen" },
+    { en: "Spoon", ua: "Ложка", category: "kitchen" },
+    { en: "Fork", ua: "Виделка", category: "kitchen" },
 
-    // Спальня
-    { en: "Bed", ua: "Ліжко", category: "bedroom" },
-    { en: "Pillow", ua: "Подушка", category: "bedroom" },
-    { en: "Blanket", ua: "Ковдра", category: "bedroom" },
-    { en: "Wardrobe", ua: "Шафа", category: "bedroom" },
-
-    // Прихожа
-    { en: "Hallway", ua: "Прихожа", category: "hallway" },
-    { en: "Front door", ua: "Вхідні двері", category: "hallway" },
-    { en: "Shoe rack", ua: "Полиця для взуття", category: "hallway" },
-
-    // Дім
-    { en: "House", ua: "Будинок", category: "home" },
-    { en: "Roof", ua: "Дах", category: "home" },
-    { en: "Window", ua: "Вікно", category: "home" },
-
-    // Офіс
-    { en: "Desk", ua: "Письмовий стіл", category: "office" },
-    { en: "Laptop", ua: "Ноутбук", category: "office" },
-    { en: "Printer", ua: "Принтер", category: "office" },
-
-    // Ігри
-    { en: "Video game", ua: "Відеогра", category: "games" },
-    { en: "Controller", ua: "Геймпад", category: "games" },
-    { en: "Quest", ua: "Квест", category: "games" },
-
-    // Побут
-    { en: "Vacuum cleaner", ua: "Пилосос", category: "household" },
-    { en: "Washing machine", ua: "Пральна машина", category: "household" },
-    { en: "Iron", ua: "Праска", category: "household" },
-
-    // Електроніка
+    // Електроніка та Гаджети
     { en: "Smartphone", ua: "Смартфон", category: "electronics" },
     { en: "Router", ua: "Роутер", category: "electronics" },
     { en: "Graphics card", ua: "Відеокарта", category: "electronics" },
+    { en: "Motherboard", ua: "Материнська плата", category: "electronics" },
+    { en: "Power supply", ua: "Блок живлення", category: "electronics" },
+    { en: "Processor", ua: "Процесор", category: "electronics" },
 
-    // Іграшки
-    { en: "Doll", ua: "Лялька", category: "toys" },
-    { en: "Teddy bear", ua: "Ведмедик", category: "toys" },
-    { en: "Puzzle", ua: "Пазл", category: "toys" },
+    // Подорожі
+    { en: "Passport control", ua: "Паспортний контроль", category: "travel" },
+    { en: "Luggage", ua: "Багаж", category: "travel" },
+    { en: "Boarding pass", ua: "Посадковий талон", category: "travel" },
+    { en: "Flight attendant", ua: "Бортпровідник", category: "travel" },
 
-    // Машини
-    { en: "Engine", ua: "Двигун", category: "cars" },
-    { en: "Steering wheel", ua: "Кермо", category: "cars" },
-    { en: "Tire", ua: "Шина", category: "cars" },
-
-    // Будова
-    { en: "Brick", ua: "Цегла", category: "building" },
-    { en: "Concrete", ua: "Бетон", category: "building" },
-    { en: "Hammer", ua: "Молоток", category: "building" },
-
-    // Університет
-    { en: "Lecture", ua: "Лекція", category: "university" },
-    { en: "Professor", ua: "Професор", category: "university" },
-    { en: "Exam", ua: "Іспит", category: "university" },
-
-    // Інтерв'ю
-    { en: "Resume", ua: "Резюме", category: "interview" },
-    { en: "Candidate", ua: "Кандидат", category: "interview" },
-    { en: "Skill", ua: "Навичка", category: "interview" },
-
-    // ТБ і фільми
-    { en: "Series", ua: "Серіал", category: "tv_films" },
-    { en: "Episode", ua: "Епізод", category: "tv_films" },
-    { en: "Soundtrack", ua: "Саундтрек", category: "tv_films" },
-
-    // Цитати
-    { en: "You're a wizard, Harry.", ua: "Ти чарівник, Гаррі.", category: "quotes" },
-    { en: "May the Force be with you.", ua: "Хай прибуде з тобою Сила!", category: "quotes" },
-    { en: "I'll be back.", ua: "Я повернусь.", category: "quotes" }
+    // Здоров'я
+    { en: "Headache", ua: "Головний біль", category: "health" },
+    { en: "Prescription", ua: "Рецепт на ліки", category: "health" },
+    { en: "Appointment", ua: "Запис до лікаря", category: "health" }
 ];
