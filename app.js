@@ -42,11 +42,20 @@ function changeProfile() {
 }
 
 // 1. РЕНДЕР ГРАМАТИКИ ТА МОДАЛЬНЕ ВІКНО
+// ЗЧИТУВАННЯ ТА РЕНДЕР ГРАМАТИКИ (БАЗОВА + ВЧИТЕЛЬСЬКА)
+function getFullGrammarList() {
+    const customGrammar = JSON.parse(localStorage.getItem("customGrammar") || "[]");
+    return [...grammarTopics, ...customGrammar];
+}
+
 function renderGrammar() {
     const container = document.getElementById("grammar-topics-container");
-    if(!container) return;
+    if (!container) return;
     container.innerHTML = "";
-    grammarTopics.forEach(g => {
+
+    const allGrammar = getFullGrammarList();
+
+    allGrammar.forEach(g => {
         const item = document.createElement("div");
         item.className = "grammar-card-item";
         item.onclick = () => openGrammarModal(g.id);
@@ -60,27 +69,75 @@ function renderGrammar() {
 }
 
 function openGrammarModal(topicId) {
-    const topic = grammarTopics.find(t => t.id === topicId);
+    const allGrammar = getFullGrammarList();
+    const topic = allGrammar.find(t => t.id === topicId);
     if (!topic) return;
 
     document.getElementById("modal-title").textContent = topic.title;
-    document.getElementById("modal-formula").textContent = "📌 Формула: " + topic.formula;
+    document.getElementById("modal-formula").textContent = "📌 Формула: " + (topic.formula || "—");
     document.getElementById("modal-explanation").textContent = topic.explanation;
-    document.getElementById("modal-signals").textContent = topic.signalWords;
+    document.getElementById("modal-signals").textContent = topic.signalWords || "—";
 
     const list = document.getElementById("modal-examples");
     list.innerHTML = "";
-    topic.examples.forEach(ex => {
-        const li = document.createElement("li");
-        li.textContent = ex;
-        list.appendChild(li);
-    });
+    if (topic.examples && topic.examples.length) {
+        topic.examples.forEach(ex => {
+            const li = document.createElement("li");
+            li.textContent = ex;
+            list.appendChild(li);
+        });
+    } else {
+        list.innerHTML = "<li>Прикладів поки немає.</li>";
+    }
 
     document.getElementById("grammar-modal").classList.add("active");
 }
 
 function closeGrammarModal() {
     document.getElementById("grammar-modal").classList.remove("active");
+}
+
+// СТВОРЕННЯ НОВОГО ГРАМАТИЧНОГО ПРАВИЛА ВЧИТЕЛЕМ
+function addCustomGrammarRule() {
+    const title = document.getElementById("g-title").value.trim();
+    const shortDesc = document.getElementById("g-short").value.trim();
+    const formula = document.getElementById("g-formula").value.trim();
+    const explanation = document.getElementById("g-explanation").value.trim();
+    const signalWords = document.getElementById("g-signals").value.trim();
+    const rawExamples = document.getElementById("g-examples").value.trim();
+
+    if (!title || !explanation) {
+        alert("Введіть хоча б назву та пояснення правила!");
+        return;
+    }
+
+    const examples = rawExamples ? rawExamples.split("\n").map(e => e.trim()).filter(e => e) : [];
+    const ruleId = "grammar_" + Date.now();
+
+    const newRule = {
+        id: ruleId,
+        title: title,
+        shortDesc: shortDesc || title,
+        formula: formula,
+        explanation: explanation,
+        signalWords: signalWords,
+        examples: examples
+    };
+
+    let customGrammar = JSON.parse(localStorage.getItem("customGrammar") || "[]");
+    customGrammar.push(newRule);
+    localStorage.setItem("customGrammar", JSON.stringify(customGrammar));
+
+    // Очищення полів форми
+    document.getElementById("g-title").value = "";
+    document.getElementById("g-short").value = "";
+    document.getElementById("g-formula").value = "";
+    document.getElementById("g-explanation").value = "";
+    document.getElementById("g-signals").value = "";
+    document.getElementById("g-examples").value = "";
+
+    renderGrammar();
+    alert(`Правило "${title}" успішно додано!`);
 }
 
 // 2. РЕЖИМИ НАВЧАННЯ (КАРТКИ, ТЕСТ, ГРА)
