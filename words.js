@@ -1,4 +1,4 @@
-// 1. ПОВНИЙ АЛФАВІТ ДЛЯ ДІТЕЙ (A-Z)
+// 1. АБЕТКА ДЛЯ ДІТЕЙ (A-Z)
 const alphabetData = [
     { letter: 'A', word: 'Apple', ua: 'Яблуко 🍏', icon: '🍎' },
     { letter: 'B', word: 'Ball', ua: 'М\'яч ⚽', icon: '⚽' },
@@ -28,39 +28,61 @@ const alphabetData = [
     { letter: 'Z', word: 'Zebra', ua: 'Зебра 🦓', icon: '🦓' }
 ];
 
-// 2. ГРАМАТИЧНІ ТЕМИ
+// 2. ГРАМАТИЧНІ ТЕМИ (ДЛЯ МОДАЛЬНОГО ВІКНА)
 const grammarTopics = [
-    { id: 'to_be', title: 'Дієслово To Be (Am / Is / Are)', desc: 'Основне дієслово «бути». Опис стану, імені чи професії.', rule: 'I am / He, She, It is / We, You, They are' },
-    { id: 'present_simple', title: 'Present Simple (Теперішній простий)', desc: 'Щоденні дії, звички та загальні факти.', rule: 'V1 (для He/She/It додаємо -s/-es). Допоміжні: Do / Does' },
-    { id: 'past_simple', title: 'Past Simple (Минулий простий)', desc: 'Дії, які повністю завершилися в минулому.', rule: 'V2 (правильні +ed, неправильні — 2 форма). Допоміжне: Did' },
-    { id: 'future_simple', title: 'Future Simple (Майбутній простий)', desc: 'Обіцянки, спонтанні рішення та прогнози.', rule: 'Will + V1' }
+    {
+        id: 'to_be',
+        title: 'Дієслово To Be (Am / Is / Are)',
+        shortDesc: 'Основне дієслово «бути, знаходитися, бути кимось».',
+        formula: 'I am | He/She/It is | We/You/They are',
+        explanation: 'Дієслово To Be використовується, коли в реченні немає динамічної дії (що робити?), а є опис стану, віку, професії чи місцезнаходження.',
+        examples: ['I am a student. (Я студент)', 'She is at home. (Вона вдома)', 'They are happy. (Вони щасливі)'],
+        signalWords: 'now, today, currently'
+    },
+    {
+        id: 'present_simple',
+        title: 'Present Simple (Теперішній простий)',
+        shortDesc: 'Регулярні дії, звички, розклад та загальні факти.',
+        formula: '[Хто] + V1 (s/es для He/She/It) | Do/Does + [Хто] + V1?',
+        explanation: 'Вживається для дій, які відбуваються постійно, періодично або взагалі завжди.',
+        examples: ['I drink coffee every morning. (Я п\'ю каву щоранку)', 'He works in an office. (Він працює в офісі)'],
+        signalWords: 'always, usually, often, sometimes, never, every day'
+    },
+    {
+        id: 'past_simple',
+        title: 'Past Simple (Минулий простий)',
+        shortDesc: 'Завершені дії в минулому із чітким вказівником часу.',
+        formula: '[Хто] + V2 (або Ved) | Did + [Хто] + V1?',
+        explanation: 'Використовується для подій, які відбулися у визначений момент у минулому.',
+        examples: ['I watched a movie yesterday. (Я подивився фільм вчора)', 'She bought a car last week. (Вона купила авто минулого тижня)'],
+        signalWords: 'yesterday, ago, last week/month/year, in 2020'
+    },
+    {
+        id: 'future_simple',
+        title: 'Future Simple (Майбутній простий)',
+        shortDesc: 'Спонтанні рішення, обіцянки, передбачення на майбутнє.',
+        formula: '[Хто] + Will + V1 | Will + [Хто] + V1?',
+        explanation: 'Вживається, коли ми приймаємо рішення в момент мовлення або обіцяємо щось зробити.',
+        examples: ['I will help you. (Я допоможу тобі)', 'It will rain tomorrow. (Завтра піде дощ)'],
+        signalWords: 'tomorrow, next week/year, soon'
+    }
 ];
 
-// 3. ПОВНИЙ КАТАЛОГ ТЕМ (20 СТАБІЛЬНИХ КАТЕГОРІЙ)
+// 3. БАЗОВІ КАТЕГОРІЇ
 const defaultCategories = [
-    { id: 'all', name: '🌟 Усі теми та слова', desc: 'Загальна база всіх слів для комплексного тестування.' },
-    { id: 'verbs', name: '⚡ Неправильні дієслова', desc: 'Три форми основних неправильних дієслів.' },
-    { id: 'kitchen', name: '🍳 Кухня та Готування', desc: 'Посуд, кухонна техніка, спеції та кулінарія.' },
-    { id: 'bedroom', name: '🛏️ Спальня та Сон', desc: 'Меблі, білизна та предмети відпочинку.' },
-    { id: 'hallway', name: '🚪 Прихожа та Вхід', desc: 'Передпокій, взуття, шафи та вішалки.' },
-    { id: 'home', name: '🏠 Дім та Архітектура', desc: 'Кімнати, конструкція будинку, матеріал стін.' },
-    { id: 'office', name: '💻 Офіс та Робота', desc: 'Робоче місце, технічні засоби, канцелярія.' },
-    { id: 'games', name: '🎮 Ігри та Геймінг', desc: 'Термінологія відеоігор, механіки та залізо.' },
-    { id: 'household', name: '🧹 Побут та Прибирання', desc: 'Чистота, домашні справи, побутова хімія.' },
-    { id: 'electronics', name: '⚡ Електроніка та Гаджети', desc: 'Комп\'ютерні комплектуючі, девайси, мережа.' },
-    { id: 'toys', name: '🧸 Дитячі Іграшки', desc: 'Конструктори, ляльки, розваги для дітей.' },
-    { id: 'cars', name: '🚗 Машини та Транспорт', desc: 'Деталі авто, механіка, автодорожній рух.' },
-    { id: 'building', name: '🧱 Будівництво та Ремонт', desc: 'Інструменти, матеріали, монтажні роботи.' },
-    { id: 'university', name: '🎓 Університет та Наука', desc: 'Лекції, іспити, академічна термінологія.' },
-    { id: 'interview', name: '💼 Співбесіда та Кар\'єра', desc: 'Резюме, навички, ділові переговори.' },
-    { id: 'tv_films', name: '🎬 Кіно та Серіали', desc: 'Жанри, саундтреки, акторський склад.' },
-    { id: 'food', name: '🍎 Їжа та Продукти', desc: 'Фрукти, овочі, м\'ясо, напої та страви.' },
-    { id: 'travel', name: '✈️ Подорожі та Готелі', desc: 'Аеропорт, вокзал, туризм, бронювання.' },
-    { id: 'health', name: '🏥 Здоров\'я та Медицина', desc: 'Тіло людини, симптоми, аптека, лікарі.' },
-    { id: 'emotions', name: '🎭 Емоції та Характер', desc: 'Почуття, риси характеру, настрої.' }
+    { id: 'all', name: '🌟 Усі теми та слова', desc: 'Загальна база всіх слів для комплексного тренування.' },
+    { id: 'verbs', name: '⚡ Неправильні дієслова', desc: 'Основні неправильні дієслова у трьох формах.' },
+    { id: 'kitchen', name: '🍳 Кухня', desc: 'Слова та фрази, пов\'язані з кухнею.' },
+    { id: 'bedroom', name: '🛏️ Спальня', desc: 'Предмети інтер\'єру спальної кімнати.' },
+    { id: 'hallway', name: '🚪 Прихожа', desc: 'Передпокій, вхідні двері, взуття.' },
+    { id: 'home', name: '🏠 Дім', desc: 'Загальні поняття про будинок.' },
+    { id: 'office', name: '💻 Офіс', desc: 'Робоче місце та комп\'ютер.' },
+    { id: 'games', name: '🎮 Ігри', desc: 'Геймплей та ігрова термінологія.' },
+    { id: 'household', name: '🧹 Побут', desc: 'Домашні справи та побутова техніка.' },
+    { id: 'electronics', name: '⚡ Електроніка', desc: 'Гаджети та деталі ПК.' }
 ];
 
-// 4. СЛОВНИКОВА БАЗА СЛІВ (ОСНОВА + АВТОНАПОВНЕННЯ)
+// 4. ПОВНА БАЗА СЛІВ (НЕ СКОРОЧЕНА)
 const baseWords = [
     // Неправильні дієслова
     { en: "Be (was/were, been)", ua: "Бути", category: "verbs" },
@@ -68,13 +90,13 @@ const baseWords = [
     { en: "Break (broke, broken)", ua: "Ламати", category: "verbs" },
     { en: "Bring (brought, brought)", ua: "Приносити", category: "verbs" },
     { en: "Buy (bought, bought)", ua: "Купувати", category: "verbs" },
-    { en: "Choose (chose, chosen)", ua: "Вибирати", category: "verbs" },
+    { en: "Come (came, come)", ua: "Приходити", category: "verbs" },
     { en: "Do (did, done)", ua: "Робити", category: "verbs" },
     { en: "Eat (ate, eaten)", ua: "Їсти", category: "verbs" },
-    { en: "Find (found, found)", ua: "Знаходити", category: "verbs" },
     { en: "Go (went, gone)", ua: "Йти, їхати", category: "verbs" },
     { en: "Have (had, had)", ua: "Мати", category: "verbs" },
     { en: "Make (made, made)", ua: "Створювати", category: "verbs" },
+    { en: "Read (read, read)", ua: "Читати", category: "verbs" },
 
     // Кухня
     { en: "Refrigerator", ua: "Холодильник", category: "kitchen" },
@@ -86,22 +108,45 @@ const baseWords = [
     { en: "Spoon", ua: "Ложка", category: "kitchen" },
     { en: "Fork", ua: "Виделка", category: "kitchen" },
 
-    // Електроніка та Гаджети
+    // Спальня
+    { en: "Bed", ua: "Ліжко", category: "bedroom" },
+    { en: "Pillow", ua: "Подушка", category: "bedroom" },
+    { en: "Blanket", ua: "Ковдра", category: "bedroom" },
+    { en: "Wardrobe", ua: "Шафа", category: "bedroom" },
+    { en: "Mattress", ua: "Матрац", category: "bedroom" },
+
+    // Прихожа
+    { en: "Hallway", ua: "Прихожа", category: "hallway" },
+    { en: "Front door", ua: "Вхідні двері", category: "hallway" },
+    { en: "Shoe rack", ua: "Полиця для взуття", category: "hallway" },
+    { en: "Hanger", ua: "Вішалка", category: "hallway" },
+
+    // Дім
+    { en: "House", ua: "Будинок", category: "home" },
+    { en: "Roof", ua: "Дах", category: "home" },
+    { en: "Window", ua: "Вікно", category: "home" },
+    { en: "Wall", ua: "Стіна", category: "home" },
+    { en: "Floor", ua: "Підлога", category: "home" },
+
+    // Офіс
+    { en: "Desk", ua: "Письмовий стіл", category: "office" },
+    { en: "Laptop", ua: "Ноутбук", category: "office" },
+    { en: "Printer", ua: "Принтер", category: "office" },
+    { en: "Keyboard", ua: "Клавіатура", category: "office" },
+
+    // Ігри
+    { en: "Video game", ua: "Відеогра", category: "games" },
+    { en: "Controller", ua: "Геймпад", category: "games" },
+    { en: "Quest", ua: "Квест", category: "games" },
+    { en: "Inventory", ua: "Інвентар", category: "games" },
+
+    // Побут
+    { en: "Vacuum cleaner", ua: "Пилосос", category: "household" },
+    { en: "Washing machine", ua: "Пральна машина", category: "household" },
+    { en: "Iron", ua: "Праска", category: "household" },
+
+    // Електроніка
     { en: "Smartphone", ua: "Смартфон", category: "electronics" },
     { en: "Router", ua: "Роутер", category: "electronics" },
-    { en: "Graphics card", ua: "Відеокарта", category: "electronics" },
-    { en: "Motherboard", ua: "Материнська плата", category: "electronics" },
-    { en: "Power supply", ua: "Блок живлення", category: "electronics" },
-    { en: "Processor", ua: "Процесор", category: "electronics" },
-
-    // Подорожі
-    { en: "Passport control", ua: "Паспортний контроль", category: "travel" },
-    { en: "Luggage", ua: "Багаж", category: "travel" },
-    { en: "Boarding pass", ua: "Посадковий талон", category: "travel" },
-    { en: "Flight attendant", ua: "Бортпровідник", category: "travel" },
-
-    // Здоров'я
-    { en: "Headache", ua: "Головний біль", category: "health" },
-    { en: "Prescription", ua: "Рецепт на ліки", category: "health" },
-    { en: "Appointment", ua: "Запис до лікаря", category: "health" }
+    { en: "Graphics card", ua: "Відеокарта", category: "electronics" }
 ];
