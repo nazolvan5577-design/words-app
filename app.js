@@ -404,16 +404,85 @@ function flipCard() {
 function nextCard() { if (activeWords.length) { cardIndex = (cardIndex + 1) % activeWords.length; updateCard(); } }
 function prevCard() { if (activeWords.length) { cardIndex = (cardIndex - 1 + activeWords.length) % activeWords.length; updateCard(); } }
 
+// СТАТИЧНИЙ 3D ФОН З СОТАМИ (БЕЗ РУХУ)
 function initCanvasBg() {
     const canvas = document.getElementById('bg-canvas');
-    if(!canvas) return;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let width, height;
-    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resize); resize();
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-        requestAnimationFrame(animate);
+
+    const hexRadius = 38;
+    const hexHeight = Math.sqrt(3) * hexRadius;
+    const hexWidth = 2 * hexRadius;
+
+    // Палітра об'ємних 3D відтінків
+    const palette = [
+        { main: '#1e2029', top: 'rgba(255, 255, 255, 0.08)' },
+        { main: '#252836', top: 'rgba(52, 152, 219, 0.15)' },
+        { main: '#1c2833', top: 'rgba(39, 174, 96, 0.15)' },
+        { main: '#2c2233', top: 'rgba(155, 89, 182, 0.15)' },
+        { main: '#2e241e', top: 'rgba(241, 196, 15, 0.12)' },
+        { main: '#1a242f', top: 'rgba(26, 188, 156, 0.15)' }
+    ];
+
+    function drawHexagon3D(x, y, radius, theme) {
+        // Основний градієнт для 3D ефекту глибини
+        const grad = ctx.createLinearGradient(x - radius, y - radius, x + radius, y + radius);
+        grad.addColorStop(0, theme.main);
+        grad.addColorStop(1, '#0e0e12');
+
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+            const angle = (Math.PI / 3) * i;
+            const hx = x + radius * Math.cos(angle);
+            const hy = y + radius * Math.sin(angle);
+            if (i === 0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
+        }
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // Темний контур
+        ctx.strokeStyle = '#0a0a0d';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Верхній 3D-відблиск (Bevel highlight)
+        ctx.beginPath();
+        for (let i = 3; i <= 5; i++) {
+            const angle = (Math.PI / 3) * i;
+            const hx = x + (radius - 1) * Math.cos(angle);
+            const hy = y + (radius - 1) * Math.sin(angle);
+            if (i === 3) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
+        }
+        ctx.strokeStyle = theme.top;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
     }
-    animate();
+
+    function renderStaticGrid() {
+        const width = canvas.width = window.innerWidth;
+        const height = canvas.height = window.innerHeight;
+
+        ctx.fillStyle = '#121212';
+        ctx.fillRect(0, 0, width, height);
+
+        const horizDist = hexWidth * 3 / 4;
+        const vertDist = hexHeight;
+        const cols = Math.ceil(width / horizDist) + 2;
+        const rows = Math.ceil(height / vertDist) + 2;
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const x = c * horizDist;
+                const y = r * vertDist + (c % 2 === 0 ? 0 : vertDist / 2);
+                
+                // Візерунок розподілу кольорів
+                const colorIndex = (r * 5 + c * 3) % palette.length;
+                drawHexagon3D(x, y, hexRadius - 1, palette[colorIndex]);
+            }
+        }
+    }
+
+    window.addEventListener('resize', renderStaticGrid);
+    renderStaticGrid();
 }
